@@ -1,0 +1,2916 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BKEEPRS | Elite Technical Engineering</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Tajawal:wght@400;500;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#050505',
+                        surface: '#0A0B0D',
+                        accent: '#CCFF00',
+                        muted: '#7A828E',
+                        border: '#1A1D23',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --accent: #CCFF00;
+            --primary: #050505;
+            --surface: #0A0B0D;
+            --blur: 4rem;
+            --contrast: 3.5;
+        }
+
+        body {
+            background-color: var(--primary);
+            color: #EAECEF;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Abstract background applied to body - FULL VISIBILITY */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url('abstracts-bg.png') center center / cover no-repeat;
+            opacity: 1;
+            /* Full opacity - no hiding */
+            z-index: -2;
+            /* Behind the glow overlay */
+            pointer-events: none;
+
+            /* Premium Blending: Makes the green pop against the dark background */
+            mix-blend-mode: screen;
+
+            /* NO MASK - full coverage across entire page */
+        }
+
+        /* Ambient glow overlay for depth */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* Subtle multi-color glow */
+            background:
+                radial-gradient(circle at 15% 50%, rgba(204, 255, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(204, 255, 0, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            /* On top of the abstract background */
+            pointer-events: none;
+        }
+
+        html {
+            overflow-x: hidden;
+        }
+
+        img,
+        video,
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Starry Night Sky - Parallax Stars */
+        #stars,
+        #stars2,
+        #stars3 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        #stars {
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            animation: animStar 50s linear infinite;
+        }
+
+        #stars2 {
+            width: 2px;
+            height: 2px;
+            background: transparent;
+            animation: animStar 100s linear infinite;
+        }
+
+        #stars3 {
+            width: 3px;
+            height: 3px;
+            background: transparent;
+            animation: animStar 150s linear infinite;
+        }
+
+        @keyframes animStar {
+            from {
+                transform: translateY(0px);
+            }
+
+            to {
+                transform: translateY(-2000px);
+            }
+        }
+
+        /* Simple Logo Hover Effect */
+        .logo-container img {
+            transition: transform 0.3s ease, filter 0.3s ease;
+            background: transparent;
+            mix-blend-mode: normal;
+        }
+
+        .logo-container:hover img {
+            transform: scale(1.1) rotate(5deg);
+            filter: brightness(1.2) drop-shadow(0 0 8px rgba(204, 255, 0, 0.5));
+        }
+
+        /* Work Section - Horizontal Portfolio Scroller */
+        #work .section-inner {
+            overflow: visible;
+            /* keep section normal */
+        }
+
+        /* The horizontal scroller (this is what should scroll) */
+        .work-scroller {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(204, 255, 0, 0.3) transparent;
+            cursor: grab;
+            padding: 0 1.5rem 2rem;
+            touch-action: pan-x;
+        }
+
+        .work-scroller:active {
+            cursor: grabbing;
+        }
+
+        .work-scroller::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .work-scroller::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .work-scroller::-webkit-scrollbar-thumb {
+            background: rgba(204, 255, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .work-scroller::-webkit-scrollbar-thumb:hover {
+            background: rgba(204, 255, 0, 0.5);
+        }
+
+        .work-scroll-wrapper {
+            display: flex;
+            gap: 1.5rem;
+            padding: 0.5rem 0;
+            width: max-content;
+        }
+
+        .work-item {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .work-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .work-row:nth-child(even) {
+            direction: rtl;
+        }
+
+        .work-row:nth-child(even)>* {
+            direction: ltr;
+        }
+
+        .work-text-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .work-text-content h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .work-text-content .work-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .work-text-content p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 1023px) {
+            .work-row {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                direction: ltr !important;
+            }
+
+            .work-row:nth-child(even) {
+                direction: ltr;
+            }
+
+            .work-item {
+                max-width: 100%;
+            }
+        }
+
+        .work-item-frame {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            background: #0A0B0D;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .work-item:hover .work-item-frame {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(204, 255, 0, 0.15);
+            border-color: rgba(204, 255, 0, 0.2);
+        }
+
+        /* Device frame top bar */
+        .work-item-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 24px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .work-item-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: initial;
+        }
+
+        /* Mobile sizing and responsive improvements */
+        @media (max-width: 768px) {
+
+            /* Global section spacing */
+            section {
+                padding: 84px 0;
+            }
+
+            section:first-of-type {
+                padding-top: 120px;
+            }
+
+            /* Navbar sizing */
+            #navbar {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            #nav-inner {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            /* Intro spacing */
+            .intro-wrap {
+                padding: 0 1rem;
+            }
+
+            .intro-content {
+                padding: 6.5rem 0 3rem;
+                gap: 2rem;
+            }
+
+            /* FIX: remove giant hero dead-space on mobile */
+            .intro-content {
+                min-height: auto;
+                padding-top: 5.5rem;
+                /* was way too large combined with navbar */
+            }
+
+            /* FIX: remove the huge scroll spacer used for the word-rail on desktop/tablet */
+            #intro {
+                min-height: 100vh !important;
+                padding-bottom: 0 !important;
+                /* JS will set it dynamically */
+            }
+
+            /* FIX: make hero text visible immediately on mobile (avoid intersect opacity=0 issue) */
+            #intro [class*="intersect:motion-preset"] {
+                opacity: 1 !important;
+                transform: none !important;
+                filter: none !important;
+            }
+
+            /* First section should not stack padding with navbar on mobile */
+            section:first-of-type {
+                padding-top: 96px;
+            }
+
+            /* Make words easier to read on mobile */
+            .intro-list {
+                gap: 1.25rem;
+            }
+
+            .intro-list li {
+                filter: blur(1px);
+                opacity: 0.28;
+            }
+
+            .intro-list li.is-active {
+                filter: blur(0);
+                opacity: 1;
+            }
+
+            /* Work section */
+            .work-row {
+                gap: 1.25rem;
+                margin-bottom: 2.75rem;
+            }
+
+            .work-item {
+                max-width: 100%;
+            }
+
+            .work-item-frame {
+                height: 260px;
+                border-radius: 0.9rem;
+            }
+
+            .work-item-image-container {
+                border-radius: 0.9rem;
+            }
+
+            .work-text-content h3 {
+                font-size: 1.55rem;
+            }
+
+            .work-text-content p {
+                font-size: 0.95rem;
+            }
+
+            /* Mobile fix: avoid nested scroll inside work cards (it hijacks page scrolling) */
+            .work-item-image-container {
+                overflow: hidden;
+                touch-action: pan-y;
+                overscroll-behavior: auto;
+            }
+
+            /* Crop screenshots nicely inside the frame on mobile */
+            .work-item-image {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+                object-position: top;
+            }
+
+            /* FINAL MOBILE FIX: hero should be text-first, no rail */
+            .intro-rail {
+                display: none !important;
+            }
+
+            /* Ensure hero content sits at the top, not vertically centered */
+            .intro-content {
+                justify-content: flex-start !important;
+                padding-bottom: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            /* Navbar + logo */
+            #navbar {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+
+            #nav-inner {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+                border-radius: 1rem;
+            }
+
+            /* Intro typography */
+            .intro-h1 {
+                font-size: clamp(44px, 14vw, 92px);
+                line-height: 0.9;
+            }
+
+            .intro-subheadline {
+                font-size: 1.05rem;
+            }
+
+            .intro-kicker {
+                font-size: 9px;
+            }
+
+            /* Extra-tight hero spacing for small phones */
+            .intro-content {
+                padding-top: 4.75rem;
+            }
+
+            /* Word rail */
+            .intro-list li {
+                font-size: clamp(20px, 7vw, 44px);
+                letter-spacing: -0.01em;
+            }
+
+            /* Work */
+            .work-item-frame {
+                height: 240px;
+            }
+
+            .work-text-content h3 {
+                font-size: 1.4rem;
+            }
+
+            .work-text-content p {
+                font-size: 0.92rem;
+            }
+
+            /* Extra-small screens: keep the crop stable and reduce visual jitter */
+            .work-item-frame {
+                overflow: hidden;
+            }
+
+            /* Reduce heavy motion blur on tiny screens */
+            [class*="intersect:motion-preset-blur-left"] {
+                filter: blur(4px);
+            }
+
+            [class*="intersect:motion-preset-slide-left"],
+            [class*="intersect:motion-preset-slide-right"] {
+                transform: translateX(24px);
+            }
+
+            [class*="intersect:motion-preset-slide-up"] {
+                transform: translateY(24px);
+            }
+        }
+
+        /* Work item image container - scrollable */
+        .work-item-image-container {
+            position: absolute;
+            inset: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
+            z-index: 1;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(204, 255, 0, 0.3) transparent;
+            border-radius: 0.75rem;
+        }
+
+        .work-item-image-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .work-item-image-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .work-item-image-container::-webkit-scrollbar-thumb {
+            background: rgba(204, 255, 0, 0.4);
+            border-radius: 3px;
+        }
+
+        .work-item-image-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(204, 255, 0, 0.6);
+        }
+
+        /* Subtle bottom gradient overlay - reduced opacity */
+        .work-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 10%;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.15) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Card footer - title outside */
+        .work-item-footer {
+            margin-top: 1rem;
+            padding: 0 0.5rem;
+        }
+
+        .work-item-footer h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 0 0.25rem;
+            line-height: 1.2;
+        }
+
+        .work-item-footer p {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+            font-weight: 400;
+        }
+
+        /* Marketing copy column */
+        .work-marketing {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding-right: 3rem;
+        }
+
+        .work-marketing-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .work-marketing-item strong {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1.3;
+        }
+
+        .work-marketing-item span {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+        }
+
+        @media (max-width: 1023px) {
+            .work-marketing {
+                padding-right: 0;
+                margin-bottom: 2rem;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .work-marketing-item {
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 9999px;
+                padding: 0.5rem 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.125rem;
+            }
+
+            .work-marketing-item strong {
+                font-size: 0.875rem;
+            }
+
+            .work-marketing-item span {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Pricing Cards - Premium Dark Theme */
+        .pricing-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 2rem;
+            width: 19rem;
+            min-height: 500px;
+            background-color: #0A0B0D;
+            background-image: radial-gradient(at 88% 40%, #0A0B0D 0px, transparent 85%),
+                radial-gradient(at 49% 30%, #0A0B0D 0px, transparent 85%),
+                radial-gradient(at 14% 26%, #0A0B0D 0px, transparent 85%),
+                radial-gradient(at 0% 64%, rgba(204, 255, 0, 0.1) 0px, transparent 85%),
+                radial-gradient(at 41% 94%, rgba(204, 255, 0, 0.15) 0px, transparent 85%),
+                radial-gradient(at 100% 99%, rgba(204, 255, 0, 0.05) 0px, transparent 85%);
+            border-radius: 1rem;
+            box-shadow: 0px -16px 24px 0px rgba(255, 255, 255, 0.05) inset;
+            border: 1px solid rgba(204, 255, 0, 0.1);
+        }
+
+        .pricing-card .card__border {
+            overflow: hidden;
+            pointer-events: none;
+            position: absolute;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(100% + 2px);
+            height: calc(100% + 2px);
+            background-image: linear-gradient(0deg, rgba(204, 255, 0, 0.2) -50%, rgba(204, 255, 0, 0.05) 100%);
+            border-radius: 1rem;
+        }
+
+        .pricing-card .card__border::before {
+            content: "";
+            pointer-events: none;
+            position: fixed;
+            z-index: 200;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(0deg);
+            transform-origin: left;
+            width: 200%;
+            height: 10rem;
+            background-image: linear-gradient(0deg, hsla(204, 255, 0, 0) 0%, rgba(204, 255, 0, 0.3) 40%, rgba(204, 255, 0, 0.3) 60%, hsla(204, 255, 0, 0) 100%);
+            animation: rotate 8s linear infinite;
+        }
+
+        @keyframes rotate {
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .pricing-card .card_title {
+            font-size: 1.25rem;
+            color: #EAECEF;
+            font-weight: 700;
+        }
+
+        .pricing-card .card_paragraph {
+            margin-top: 0.5rem;
+            width: 100%;
+            font-size: 0.75rem;
+            color: #7A828E;
+        }
+
+        .pricing-card .line {
+            width: 100%;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            margin: 0.5rem 0;
+        }
+
+        .pricing-card .card__list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 1rem 0;
+            flex: 1;
+        }
+
+        .pricing-card .card__list_item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pricing-card .check {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 1.25rem;
+            height: 1.25rem;
+            background-color: #CCFF00;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .pricing-card .check_svg {
+            width: 0.875rem;
+            height: 0.875rem;
+            fill: #050505;
+        }
+
+        /* Pricing: currency toggle + price + unavailable features */
+        .currency-toggle {
+            display: inline-flex;
+            gap: 0.5rem;
+            padding: 0.35rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        .currency-btn {
+            cursor: pointer;
+            padding: 0.55rem 0.9rem;
+            border-radius: 9999px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+            background: transparent;
+            border: 1px solid transparent;
+            transition: all 0.25s ease;
+        }
+
+        .currency-btn.is-active {
+            background: rgba(204, 255, 0, 0.12);
+            border-color: rgba(204, 255, 0, 0.25);
+            color: #EAECEF;
+            box-shadow: 0 0 18px rgba(204, 255, 0, 0.16);
+        }
+
+        .pricing-price {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            margin-top: 0.2rem;
+        }
+
+        .pricing-price .amount {
+            font-size: 2.15rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            color: #EAECEF;
+        }
+
+        .pricing-price .period {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.55);
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .pricing-card .card__list_item.is-disabled .check {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .pricing-card .card__list_item.is-disabled .check_svg {
+            display: none;
+        }
+
+        .pricing-card .card__list_item.is-disabled .list_text {
+            color: rgba(255, 255, 255, 0.38);
+        }
+
+        @media (max-width: 768px) {
+            .pricing-price .amount {
+                font-size: 1.95rem;
+            }
+        }
+
+        .pricing-card .list_text {
+            font-size: 0.875rem;
+            color: #EAECEF;
+        }
+
+        .pricing-card .button {
+            cursor: pointer;
+            padding: 0.75rem;
+            width: 100%;
+            background-image: linear-gradient(0deg, #CCFF00, rgba(204, 255, 0, 0.8) 100%);
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #050505;
+            border: 0;
+            border-radius: 9999px;
+            box-shadow: inset 0 -2px 25px -4px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: auto;
+        }
+
+        .pricing-card .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(204, 255, 0, 0.4), inset 0 -2px 25px -4px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Premium Grained Texture Overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1A1D23;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #CCFF00;
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        /* Intersect Motion Presets - Initial States */
+        [class*="intersect:motion-preset"] {
+            opacity: 0;
+            will-change: transform, opacity, filter;
+        }
+
+        [class*="intersect:motion-preset-slide-left"] {
+            transform: translateX(-40px);
+        }
+
+        [class*="intersect:motion-preset-slide-right"] {
+            transform: translateX(40px);
+        }
+
+        [class*="intersect:motion-preset-slide-up"] {
+            transform: translateY(40px);
+        }
+
+        [class*="intersect:motion-preset-blur-left"] {
+            transform: translateX(-40px);
+            filter: blur(8px);
+        }
+
+        [class*="intersect:motion-preset-focus"] {
+            transform: scale(0.95);
+            filter: blur(4px);
+        }
+
+        /* Intersect Motion Presets - Active States */
+        [class*="intersect:motion-preset"].intersect-active {
+            opacity: 1 !important;
+            transform: translateX(0) translateY(0) scale(1) !important;
+            filter: blur(0) !important;
+        }
+
+        /* Motion Easing - Override default transition when easing class is present */
+        [class*="intersect:motion-ease-spring-bouncier"] {
+            transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+        }
+
+        [class*="intersect:motion-ease-spring"] {
+            transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        /* Default transition for intersect animations */
+        [class*="intersect:motion-preset"] {
+            transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+                transform 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+                filter 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .glass-card {
+            background: rgba(15, 17, 21, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(204, 255, 0, 0.2);
+            transform: translateY(-5px);
+            background: rgba(15, 17, 21, 0.6);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(204, 255, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        /* Contact card — make it feel more premium/larger on desktop */
+        .contact-card {
+            max-width: 980px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            min-height: 640px;
+            background: radial-gradient(120% 120% at 50% 0%, rgba(204, 255, 0, 0.08) 0%, rgba(15, 17, 21, 0.55) 42%, rgba(15, 17, 21, 0.42) 100%);
+            border-color: rgba(204, 255, 0, 0.14);
+            box-shadow:
+                0 18px 60px rgba(0, 0, 0, 0.55),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        .contact-card h2 {
+            letter-spacing: -0.02em;
+        }
+
+        .contact-card form input,
+        .contact-card form select,
+        .contact-card form textarea {
+            background: rgba(5, 5, 5, 0.55) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+        }
+
+        .contact-card form input:focus,
+        .contact-card form select:focus,
+        .contact-card form textarea:focus {
+            border-color: rgba(204, 255, 0, 0.35) !important;
+        }
+
+        .contact-card form button[type="submit"] {
+            margin-top: 0.25rem;
+            padding-top: 1.05rem;
+            padding-bottom: 1.05rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 30px rgba(204, 255, 0, 0.25);
+        }
+
+        @media (max-width: 768px) {
+            .contact-card {
+                min-height: auto;
+                padding-top: 2rem;
+                padding-bottom: 2rem;
+            }
+        }
+
+        .neon-glow {
+            text-shadow: 0 0 15px rgba(204, 255, 0, 0.3);
+        }
+
+        /* Nav */
+        .nav-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        /* Buttons (ripple only for real CTAs, NOT nav links) */
+        button,
+        a[href="#contact"] {
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after,
+        a[href="#contact"]::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover::after,
+        a[href="#contact"]:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Inputs */
+        input:focus,
+        textarea:focus {
+            box-shadow: 0 0 0 3px rgba(204, 255, 0, 0.1);
+        }
+
+        /* Hero/Intro Section */
+        .intro-wrap {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .intro-content {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: clamp(24px, 6vw, 96px);
+            padding: 8.5rem 0 4rem;
+        }
+
+        /* Give the intro section enough scroll distance to cycle all words (especially on mobile) */
+        #intro {
+            --steps: 8;
+        }
+
+        @media (min-width: 1024px) {
+            #intro {
+                min-height: 100vh;
+                padding-bottom: 0;
+                /* JS will handle the needed space */
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .intro-content {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+        }
+
+        .intro-sticky {
+            width: 100%;
+            max-width: 560px;
+        }
+
+        @media (min-width: 1024px) {
+
+            /* TRULY FIXED hero text - stays pinned while scrolling */
+            .intro-sticky {
+                position: fixed;
+                top: 120px;
+                left: calc((100vw - 80rem) / 2 + 1.5rem);
+                right: auto;
+                width: min(560px, 44vw);
+                z-index: 50;
+                pointer-events: auto;
+            }
+
+            /* RTL: Move hero text to the right side */
+            [dir="rtl"] .intro-sticky {
+                left: auto !important;
+                right: max(1.5rem, calc((100vw - 80rem) / 2 + 1.5rem));
+                text-align: right;
+            }
+
+            /* Also flip the rail to left for RTL */
+            [dir="rtl"] .intro-rail {
+                margin-left: 0;
+                margin-right: auto;
+                padding-left: 0;
+                padding-right: 2rem;
+                justify-content: flex-start;
+            }
+
+            /* Word rail - positioned on the RIGHT side of the screen (LTR) */
+            .intro-rail {
+                margin-left: auto;
+                width: 45%;
+                padding-top: 0;
+                padding-left: 2rem;
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            /* RTL: Word rail moves to LEFT side */
+            [dir="rtl"] .intro-rail {
+                margin-left: 0;
+                margin-right: auto;
+                padding-left: 0;
+                padding-right: 2rem;
+                justify-content: flex-start;
+            }
+
+            .intro-list {
+                text-align: right;
+            }
+
+            [dir="rtl"] .intro-list {
+                text-align: left;
+            }
+
+            /* Hide fixed hero when scrolled past intro section */
+            .intro-sticky.is-hidden {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .intro-sticky {
+                transition: opacity 0.4s ease-out;
+            }
+        }
+
+        /* Hero section background image */
+        /* Hero section background image - REMOVED (moved to body for global fade) */
+        #intro {
+            position: relative;
+        }
+
+        /* Previous ::before and ::after removed to prevent double backgrounds and cuts */
+
+        .intro-h1 {
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            line-height: 0.85;
+            text-transform: uppercase;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 40%, rgba(234, 236, 239, 0.9) 70%, rgba(234, 236, 239, 0.3) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+            font-size: clamp(64px, 12vw, 180px);
+            text-shadow: 0 0 40px rgba(204, 255, 0, 0.1);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .intro-kicker {
+            margin-top: 18px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        .intro-subheadline {
+            font-size: clamp(18px, 2.5vw, 28px);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 1rem;
+            line-height: 1.4;
+        }
+
+        .intro-kicker em {
+            color: var(--accent);
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        .intro-rail {
+            flex: 1 1 auto;
+            display: flex;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        @media (min-width: 1024px) {
+            .intro-rail {
+                width: auto;
+            }
+        }
+
+        .intro-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(16px, 3vw, 32px);
+        }
+
+        .intro-list li {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(24px, 4vw, 72px);
+            font-weight: 900;
+            line-height: 1;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            color: rgba(234, 236, 239, 0.25);
+            opacity: 0.25;
+            filter: blur(2px);
+            transition: color 300ms ease, opacity 300ms ease, filter 300ms ease, text-shadow 300ms ease;
+        }
+
+        .intro-list li.is-active {
+            color: var(--accent);
+            opacity: 1;
+            filter: blur(0);
+            text-shadow: 0 0 22px rgba(204, 255, 0, 0.25);
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+        }
+
+        section {
+            position: relative;
+            padding: 120px 0;
+            z-index: 10;
+        }
+
+        section:first-of-type {
+            padding-top: 160px;
+        }
+
+        .section-inner {
+            position: relative;
+            padding: 0;
+            z-index: 10;
+        }
+
+        section[id] {
+            scroll-margin-top: 120px;
+        }
+
+        /* =========================
+           MOBILE FINAL OVERRIDES
+           (placed at end to win cascade)
+        ========================= */
+        @media (max-width: 768px) {
+
+            /* Stop base section padding from pushing hero off-screen */
+            section {
+                padding: 72px 0 !important;
+            }
+
+            section:first-of-type {
+                padding-top: 96px !important;
+            }
+
+            /* Force hero spacing for mobile (base rules appear later otherwise) */
+            #intro {
+                min-height: auto !important;
+                padding-bottom: 0 !important;
+            }
+
+            .intro-content {
+                min-height: auto !important;
+                padding: 5.25rem 0 3.25rem !important;
+                gap: 1.75rem !important;
+                justify-content: flex-start !important;
+            }
+
+            /* Ensure hero anim classes never hide text on mobile */
+            #intro [class*="intersect:motion-preset"] {
+                opacity: 1 !important;
+                transform: none !important;
+                filter: none !important;
+            }
+
+            /* Enable the word rail on mobile (stacked under the hero) */
+            .intro-rail {
+                display: flex !important;
+                width: 100% !important;
+                margin-top: 0.75rem;
+                position: static !important;
+            }
+
+            /* Make the list readable on mobile */
+            .intro-list {
+                gap: 1.15rem;
+            }
+
+            .intro-list li {
+                font-size: clamp(18px, 7vw, 42px);
+                opacity: 0.22;
+                filter: blur(1px);
+            }
+
+            .intro-list li.is-active {
+                opacity: 1;
+                filter: blur(0);
+            }
+
+            /* Mobile: no artificial scroll spacer (desktop JS handles it) */
+            #intro {
+                min-height: auto !important;
+                padding-bottom: 0 !important;
+            }
+
+            /* Reduce gap between hero and next section on mobile */
+            /* Reduce gap between hero and next section on mobile */
+            #about {
+                padding-top: 24px !important;
+            }
+
+            /* About inner wrapper uses Tailwind `py-40` (10rem). Override on mobile. */
+            #about [class*="py-40"] {
+                padding-top: 4rem !important;
+                padding-bottom: 4rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .intro-content {
+                padding-top: 4.75rem !important;
+            }
+        }
+
+
+
+        .scroll-cue {
+            margin-top: 2.25rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.7rem 1rem;
+            border-radius: 9999px;
+            background: rgba(15, 17, 21, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.75);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            backdrop-filter: blur(10px);
+        }
+
+        .scroll-cue-icon {
+            opacity: 0.9;
+            animation: scrollCueFloat 1.6s ease-in-out infinite;
+        }
+
+        @keyframes scrollCueFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(6px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .scroll-cue {
+                display: none;
+            }
+        }
+
+
+        /* =========================
+   AURORA BACKGROUND EFFECT
+========================= */
+        .aurora-bg::before {
+            content: "";
+            position: fixed;
+            inset: -60%;
+            background:
+                radial-gradient(60% 40% at 25% 20%, rgba(204, 255, 0, 0.22), transparent 62%),
+                radial-gradient(55% 35% at 75% 55%, rgba(204, 255, 0, 0.16), transparent 64%),
+                radial-gradient(45% 35% at 55% 85%, rgba(204, 255, 0, 0.12), transparent 66%),
+                radial-gradient(35% 25% at 15% 80%, rgba(120, 255, 200, 0.08), transparent 70%);
+            filter: blur(110px);
+            opacity: 0.9;
+            mix-blend-mode: screen;
+            animation: auroraMove 14s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes auroraMove {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(-7%, -4%) scale(1.03);
+            }
+
+            66% {
+                transform: translate(6%, -2%) scale(1.05);
+            }
+
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+        }
+
+        /* =====================
+   LANGUAGE SWITCH
+===================== */
+        .lang-switch {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-left: 1rem;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+            transition: all 0.25s ease;
+        }
+
+        .lang-btn:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        .lang-btn.is-active {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(204, 255, 0, 0.25);
+            background: rgba(204, 255, 0, 0.08);
+        }
+
+        /* =====================
+   RTL MODE SUPPORT
+===================== */
+        [dir="rtl"] {
+            direction: rtl;
+        }
+
+        [dir="rtl"] .lang-switch {
+            margin-left: 0;
+            margin-right: 1rem;
+        }
+
+        [dir="rtl"] .intro-content {
+            text-align: right;
+        }
+
+        [dir="rtl"] .intro-rail {
+            justify-content: flex-end;
+        }
+
+        [dir="rtl"] .work-row:nth-child(even) {
+            direction: ltr;
+        }
+
+        [dir="rtl"] .work-row:nth-child(odd) {
+            direction: rtl;
+        }
+
+        [dir="rtl"] .work-row>* {
+            direction: ltr;
+        }
+
+        [dir="rtl"] .text-left {
+            text-align: right;
+        }
+
+        [dir="rtl"] .pricing-card,
+        [dir="rtl"] .glass-card {
+            text-align: right;
+        }
+
+        [dir="rtl"] .card__list_item {
+            flex-direction: row-reverse;
+        }
+
+        /* Arabic font support */
+        [lang="ar"] body,
+        [lang="ar"] .intro-h1,
+        [lang="ar"] h1,
+        [lang="ar"] h2,
+        [lang="ar"] h3,
+        [lang="ar"] h4 {
+            font-family: 'Tajawal', 'Space Grotesk', sans-serif;
+        }
+
+        /* =====================
+   MOBILE SCROLL HIGHLIGHT FIX
+===================== */
+        /* Ensure active state always visible on all devices */
+        .intro-list li.is-active {
+            color: var(--accent) !important;
+            opacity: 1 !important;
+            filter: blur(0) !important;
+            text-shadow: 0 0 22px rgba(204, 255, 0, 0.25);
+        }
+    </style>
+</head>
+
+<body class="selection:bg-accent selection:text-primary aurora-bg">
+
+    <!-- Starry Night Sky Background -->
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-[100] transition-all duration-500 px-6 py-8">
+        <div class="max-w-7xl mx-auto flex items-center justify-between px-8 py-3 rounded-2xl transition-all duration-500"
+            id="nav-inner">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 flex items-center justify-center logo-container">
+                    <img src="logo green.svg" alt="BKEEPRS Logo" class="w-full h-full object-contain"
+                        style="background: transparent;" />
+                </div>
+                <span class="text-2xl font-black tracking-tighter text-white uppercase">BKEEPRS<span
+                        class="text-accent">.</span></span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-10">
+                <a href="#about" class="nav-link text-muted font-bold" data-i18n="nav_about">About</a>
+                <a href="#work" class="nav-link text-muted font-bold" data-i18n="nav_work">Work</a>
+                <a href="#pricing" class="nav-link text-muted font-bold" data-i18n="nav_pricing">Pricing</a>
+                <a href="#contact"
+                    class="px-6 py-2.5 bg-accent text-primary font-mono text-[10px] font-black uppercase rounded-lg hover:shadow-[0_0_20px_rgba(204,255,0,0.3)] transition-all"
+                    data-i18n="cta_start_project">Start Project</a>
+            </div>
+
+            <button class="md:hidden text-accent" id="menu-toggle">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7">
+                    </path>
+                </svg>
+            </button>
+            <div class="lang-switch" aria-label="Language">
+                <button type="button" class="lang-btn" data-lang="en" aria-label="English">🇬🇧</button>
+                <button type="button" class="lang-btn" data-lang="ar" aria-label="العربية">🇩🇿</button>
+            </div>
+        </div>
+    </nav>
+    <!-- Mobile Menu Panel -->
+    <div id="mobile-menu" class="fixed top-[92px] left-0 right-0 z-[120] px-6 hidden md:hidden">
+        <div class="max-w-7xl mx-auto glass-card rounded-2xl border border-white/10 p-6">
+            <div class="flex flex-col gap-4">
+                <a href="#about" class="nav-link text-white font-bold" data-i18n="nav_about">About</a>
+                <a href="#work" class="nav-link text-white font-bold" data-i18n="nav_work">Work</a>
+                <a href="#pricing" class="nav-link text-white font-bold" data-i18n="nav_pricing">Pricing</a>
+                <a href="#contact"
+                    class="px-6 py-3 bg-accent text-primary font-mono text-[10px] font-black uppercase rounded-lg text-center"
+                    data-i18n="cta_start_project">Start Project</a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Intro -->
+        <section id="intro">
+            <div class="section-inner">
+                <div class="intro-wrap">
+                    <div class="intro-content">
+                        <div class="intro-sticky">
+                            <h1 class="intro-h1 intersect:motion-preset-slide-up intersect:motion-delay-[0ms]"
+                                data-i18n-html="hero_title">
+                                BUILT FOR<br />
+                                IMPACT<span class="text-accent">.</span>
+                            </h1>
+                            <p class="intro-subheadline intersect:motion-preset-slide-up intersect:motion-delay-[150ms]"
+                                data-i18n="hero_subtitle">
+                                Professional engineering. Enterprise-grade execution.
+                            </p>
+                            <p class="intro-kicker intersect:motion-preset-slide-up intersect:motion-delay-[300ms]"
+                                data-i18n-html="hero_kicker">
+                                We build <em>professional, high-conversion websites</em> for founders who want speed,
+                                performance & results — without agency bloat.
+                            </p>
+
+                            <div class="scroll-cue" aria-hidden="true">
+                                <span>SCROLL</span>
+                                <svg class="scroll-cue-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 5v14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M7 14l5 5 5-5" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+
+
+
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="intro-rail">
+                            <ul class="intro-list">
+                                <li class="is-active" data-i18n-html="word_engineer">ENGINEER<span
+                                        class="text-accent">.</span></li>
+                                <li data-i18n-html="word_automate">AUTOMATE<span class="text-accent">.</span></li>
+                                <li data-i18n-html="word_orchestrate">ORCHESTRATE AI<span class="text-accent">.</span>
+                                </li>
+                                <li data-i18n-html="word_optimize">OPTIMIZE<span class="text-accent">.</span></li>
+                                <li data-i18n-html="word_secure">SECURE<span class="text-accent">.</span></li>
+                                <li data-i18n-html="word_scale">SCALE<span class="text-accent">.</span></li>
+                                <li data-i18n-html="word_deliver">DELIVER<span class="text-accent">.</span></li>
+                                <li data-i18n-html="word_ship">SHIP<span class="text-accent">.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About -->
+        <section id="about">
+            <div class="section-inner">
+                <div class="max-w-7xl mx-auto px-6 py-16 md:py-40">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                        <div>
+                            <p class="font-mono text-[10px] text-accent uppercase tracking-widest mb-6 intersect:motion-preset-slide-left intersect:motion-delay-[0ms]"
+                                data-i18n="about_kicker">The Lab</p>
+                            <h2 class="text-5xl md:text-7xl font-black text-white mb-10 leading-tight intersect:motion-preset-slide-left intersect:motion-delay-[100ms]"
+                                data-i18n-html="about_title">BUILT FOR THE <br />TECHNICAL <span
+                                    class="text-accent">ELITE.</span></h2>
+                            <p class="text-xl text-muted leading-relaxed font-medium mb-12 intersect:motion-preset-slide-left intersect:motion-delay-[200ms]"
+                                data-i18n="about_body">Bkeeprs is a technical collective for founders who value
+                                engineering over agency bloat. We eliminate the middlemen to deliver sub-second
+                                solutions.</p>
+                            <div class="grid grid-cols-2 gap-10">
+                                <div
+                                    class="intersect:motion-preset-slide-left intersect:motion-delay-[300ms] intersect:motion-ease-spring-bouncier">
+                                    <h4 class="font-black text-xl mb-2 uppercase" data-i18n="about_feature1_title">
+                                        RADICAL SPEED</h4>
+                                    <p class="text-sm text-muted" data-i18n="about_feature1_body">We build in weeks, not
+                                        months. Speed is the only currency that matters in a technical race.</p>
+                                </div>
+                                <div
+                                    class="intersect:motion-preset-slide-left intersect:motion-delay-[500ms] intersect:motion-ease-spring-bouncier">
+                                    <h4 class="font-black text-xl mb-2 uppercase" data-i18n="about_feature2_title">ELITE
+                                        CODE</h4>
+                                    <p class="text-sm text-muted" data-i18n="about_feature2_body">Clean, documented, and
+                                        bulletproof architecture built to outlast your competition.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000"
+                                class="rounded-[3rem] grayscale intersect:motion-preset-blur-left intersect:motion-delay-[400ms]" />
+                            <div
+                                class="absolute -bottom-10 -right-10 glass-card p-10 rounded-2xl border border-accent/20 intersect:motion-preset-focus intersect:motion-delay-[600ms]">
+                                <p class="text-4xl font-black text-accent mb-1" data-i18n="about_stat">100%</p>
+                                <p class="font-mono text-[10px] uppercase tracking-widest text-muted"
+                                    data-i18n="about_stat_label">Direct Engineering</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work -->
+        <section id="work">
+            <div class="section-inner">
+                <div class="max-w-7xl mx-auto px-6 py-16">
+                    <div class="mb-12">
+                        <p class="font-mono text-[10px] text-accent uppercase tracking-widest mb-4 intersect:motion-preset-blur-left intersect:motion-delay-[0ms]"
+                            data-i18n="work_kicker">Our Work</p>
+                        <h2 class="text-5xl md:text-7xl font-black text-white mb-4 leading-tight intersect:motion-preset-blur-left intersect:motion-delay-[100ms]"
+                            data-i18n-html="work_title">Our Work — Professional Sites That <span
+                                class="text-accent">Convert</span></h2>
+                        <p class="text-lg text-muted mb-6 intersect:motion-preset-blur-left intersect:motion-delay-[200ms]"
+                            data-i18n="work_subtitle">Premium designs built for performance and growth</p>
+                        <div
+                            class="flex flex-wrap gap-3 mb-8 intersect:motion-preset-slide-up intersect:motion-delay-[300ms]">
+                            <span
+                                class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-muted uppercase tracking-widest">Agile
+                                builds</span>
+                            <span
+                                class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-muted uppercase tracking-widest">Clean
+                                UX</span>
+                            <span
+                                class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-muted uppercase tracking-widest">Fast
+                                performance</span>
+                            <span
+                                class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-muted uppercase tracking-widest">Enterprise
+                                quality</span>
+                        </div>
+                    </div>
+
+                    <!-- Alternating Work Rows -->
+                    <div class="work-projects">
+                        <!-- Row 1: Card Left, Text Right -->
+                        <div class="work-row">
+                            <div class="work-item intersect:motion-preset-slide-left intersect:motion-delay-[0ms] intersect:motion-ease-spring-bouncier"
+                                data-href="work1.html">
+                                <div class="work-item-frame">
+                                    <div class="work-item-image-container">
+                                        <img src="screenshotwork.html.png" alt="Orbit Platform Screenshot"
+                                            class="work-item-image" />
+                                    </div>
+                                    <div class="work-overlay" aria-hidden="true"></div>
+                                </div>
+                            </div>
+                            <div
+                                class="work-text-content intersect:motion-preset-slide-right intersect:motion-delay-[200ms] intersect:motion-ease-spring-bouncier">
+                                <span class="work-tag" data-i18n="work1_tag">Landing + Dashboard</span>
+                                <h3>Orbit Platform</h3>
+                                <p class="text-lg font-semibold text-white mb-3" data-i18n="work1_subtitle">Enterprise
+                                    Dashboard / Conversion-optimized UI</p>
+                                <p data-i18n="work1_body">High-conversion product site built for scale. Clean UI, fast
+                                    performance, and conversion-focused design that drives results.</p>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Text Left, Card Right (work2.png) -->
+                        <div class="work-row">
+                            <div
+                                class="work-text-content intersect:motion-preset-slide-left intersect:motion-delay-[0ms] intersect:motion-ease-spring-bouncier">
+                                <span class="work-tag" data-i18n="work2_tag">Brand + Web</span>
+                                <h3>Nova Studio</h3>
+                                <p class="text-lg font-semibold text-white mb-3" data-i18n="work2_subtitle">Brand + Web
+                                    / Premium creative build</p>
+                                <p data-i18n="work2_body">Premium agency-style build with elite design systems. Modern
+                                    aesthetics meet powerful functionality for brands that demand excellence.</p>
+                            </div>
+                            <div class="work-item intersect:motion-preset-slide-right intersect:motion-delay-[200ms] intersect:motion-ease-spring-bouncier"
+                                data-href="work1.html">
+                                <div class="work-item-frame">
+                                    <div class="work-item-image-container">
+                                        <img src="work2.png" alt="Nova Studio Screenshot" class="work-item-image" />
+                                    </div>
+                                    <div class="work-overlay" aria-hidden="true"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section id="benefits">
+            <div class="section-inner">
+                <div class="max-w-7xl mx-auto px-6 py-20">
+                    <div class="mb-12 text-center">
+                        <p class="font-mono text-[10px] text-accent uppercase tracking-widest mb-4 intersect:motion-preset-blur-left intersect:motion-delay-[0ms]"
+                            data-i18n="benefits_kicker">Why BKEEPRS?</p>
+                        <h2 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight intersect:motion-preset-blur-left intersect:motion-delay-[100ms]"
+                            data-i18n-html="benefits_title">Professional Engineering, <span class="text-accent">Not
+                                Templates</span></h2>
+                        <p class="text-lg text-muted max-w-2xl mx-auto intersect:motion-preset-blur-left intersect:motion-delay-[200ms]"
+                            data-i18n="benefits_subtitle">Fast delivery, clean code, built for scale & optimization.
+                            Enterprise-grade architecture that grows with your business.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Benefit 1 -->
+                        <div
+                            class="glass-card p-6 rounded-xl border-white/10 intersect:motion-preset-slide-up intersect:motion-delay-[0ms] intersect:motion-ease-spring-bouncier">
+                            <div class="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center mb-4">
+                                <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-black text-white mb-2">Speed of Delivery</h3>
+                            <p class="text-sm text-muted">Live in weeks, not months. Agile development that moves at
+                                your pace.</p>
+                        </div>
+
+                        <!-- Benefit 2 -->
+                        <div
+                            class="glass-card p-6 rounded-xl border-white/10 intersect:motion-preset-slide-up intersect:motion-delay-[150ms] intersect:motion-ease-spring-bouncier">
+                            <div class="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center mb-4">
+                                <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-black text-white mb-2">Performance Optimization</h3>
+                            <p class="text-sm text-muted">Pagespeed & SEO-ready. Every build optimized for speed and
+                                search.</p>
+                        </div>
+
+                        <!-- Benefit 3 -->
+                        <div
+                            class="glass-card p-6 rounded-xl border-white/10 intersect:motion-preset-slide-up intersect:motion-delay-[300ms] intersect:motion-ease-spring-bouncier">
+                            <div class="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center mb-4">
+                                <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-black text-white mb-2">UX & Design</h3>
+                            <p class="text-sm text-muted">Built for conversion. Every pixel optimized to turn visitors
+                                into customers.</p>
+                        </div>
+
+                        <!-- Benefit 4 -->
+                        <div
+                            class="glass-card p-6 rounded-xl border-white/10 intersect:motion-preset-slide-up intersect:motion-delay-[450ms] intersect:motion-ease-spring-bouncier">
+                            <div class="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center mb-4">
+                                <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-black text-white mb-2">Scalability</h3>
+                            <p class="text-sm text-muted">Architecture that grows. Built to scale from startup to
+                                enterprise.</p>
+                        </div>
+                    </div>
+
+                    <!-- Social Proof -->
+                    <div class="mt-16 pt-12 border-t border-white/10">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center mb-12">
+                            <div class="intersect:motion-preset-slide-up intersect:motion-delay-[0ms]">
+                                <div class="text-4xl font-black text-accent mb-2">50+</div>
+                                <p class="text-sm text-muted uppercase tracking-widest font-mono">Projects Delivered</p>
+                            </div>
+                            <div class="intersect:motion-preset-slide-up intersect:motion-delay-[150ms]">
+                                <div class="text-4xl font-black text-accent mb-2">30+</div>
+                                <p class="text-sm text-muted uppercase tracking-widest font-mono">Companies Served</p>
+                            </div>
+                            <div class="intersect:motion-preset-slide-up intersect:motion-delay-[300ms]">
+                                <div class="text-4xl font-black text-accent mb-2">100%</div>
+                                <p class="text-sm text-muted uppercase tracking-widest font-mono">Client Satisfaction
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-center intersect:motion-preset-slide-up intersect:motion-delay-[450ms]">
+                            <a href="#contact"
+                                class="inline-block px-8 py-4 bg-accent text-primary font-black text-lg rounded-xl hover:shadow-[0_0_30px_rgba(204,255,0,0.4)] hover:scale-105 transition-all uppercase font-mono tracking-widest">
+                                Start a Project
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing -->
+        <section id="pricing">
+            <div class="section-inner">
+                <div class="max-w-7xl mx-auto px-6 py-20">
+                    <div class="mb-12 text-center">
+                        <p
+                            class="font-mono text-[10px] text-accent uppercase tracking-widest mb-6 intersect:motion-preset-blur-left intersect:motion-delay-[0ms]">
+                            Pricing</p>
+                        <h2
+                            class="text-5xl md:text-7xl font-black text-white mb-4 leading-tight intersect:motion-preset-blur-left intersect:motion-delay-[100ms]">
+                            ELITE <span class="text-accent">PRICING.</span></h2>
+                        <p class="text-lg text-muted intersect:motion-preset-blur-left intersect:motion-delay-[200ms]">
+                            Choose the plan that fits your needs</p>
+                        <div
+                            class="mt-7 flex justify-center intersect:motion-preset-slide-up intersect:motion-delay-[300ms]">
+                            <div class="currency-toggle" role="tablist" aria-label="Currency">
+                                <button type="button" class="currency-btn is-active" data-currency="dzd" role="tab"
+                                    aria-selected="true">Algeria (DA)</button>
+                                <button type="button" class="currency-btn" data-currency="usd" role="tab"
+                                    aria-selected="false">International ($)</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-8">
+                        <div
+                            class="pricing-card intersect:motion-preset-slide-up intersect:motion-delay-[0ms] intersect:motion-ease-spring-bouncier">
+                            <div class="card__border"></div>
+                            <div class="card_title__container">
+                                <span class="card_title">Starter</span>
+                                <div class="pricing-price" data-plan="starter">
+                                    <span class="amount" data-price-dzd="9,999DA" data-price-usd="$99">9,999DA</span>
+                                    <span class="period">starting</span>
+                                </div>
+                                <p class="card_paragraph">Perfect for small projects and startups.</p>
+                            </div>
+                            <hr class="line" />
+                            <ul class="card__list">
+                                <li class="card__list_item">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">Basic Website</span>
+                                </li>
+                                <li class="card__list_item">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">Responsive Design</span>
+                                </li>
+                                <li class="card__list_item">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">Basic Support</span>
+                                </li>
+                                <li class="card__list_item is-disabled">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">SEO Optimization</span>
+                                </li>
+                            </ul>
+                            <a href="#contact" class="button inline-flex items-center justify-center"
+                                data-plan="Starter">Get Started</a>
+                        </div>
+                        <div
+                            class="pricing-card intersect:motion-preset-slide-up intersect:motion-delay-[150ms] intersect:motion-ease-spring-bouncier">
+                            <div class="card__border"></div>
+                            <div class="card_title__container">
+                                <span class="card_title">Professional</span>
+                                <div class="pricing-price" data-plan="pro">
+                                    <span class="amount" data-price-dzd="19,999DA" data-price-usd="$199">19,999DA</span>
+                                    <span class="period">starting</span>
+                                </div>
+                                <p class="card_paragraph">For growing businesses and agencies.</p>
+                            </div>
+                            <hr class="line" />
+                            <ul class="card__list">
+                                <li class="card__list_item">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">Advanced Features</span>
+                                </li>
+                                <li class="card__list_item">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">Custom Development</span>
+                                </li>
+                                <li class="card__list_item">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">Priority Support</span>
+                                </li>
+                                <li class="card__list_item">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">SEO Optimization</span>
+                                </li>
+                                <li class="card__list_item is-disabled">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">Dedicated Team</span>
+                                </li>
+                                <li class="card__list_item is-disabled">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">24/7 Support</span>
+                                </li>
+                            </ul>
+                            <a href="#contact" class="button inline-flex items-center justify-center"
+                                data-plan="Professional">Get Started</a>
+                        </div>
+                        <div
+                            class="pricing-card intersect:motion-preset-slide-up intersect:motion-delay-[300ms] intersect:motion-ease-spring-bouncier">
+                            <div class="card__border"></div>
+                            <div class="card_title__container">
+                                <span class="card_title">Enterprise</span>
+                                <div class="pricing-price" data-plan="enterprise">
+                                    <span class="amount" data-price-dzd="39,999DA" data-price-usd="$399">39,999DA</span>
+                                    <span class="period">starting</span>
+                                </div>
+                                <p class="card_paragraph">For large organizations and scale.</p>
+                            </div>
+                            <hr class="line" />
+                            <ul class="card__list">
+                                <li class="card__list_item">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">Unlimited Features</span>
+                                </li>
+                                <li class="card__list_item">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">Dedicated Team</span>
+                                </li>
+                                <li class="card__list_item">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">24/7 Support</span>
+                                </li>
+                                <li class="card__list_item">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">Custom Solutions</span>
+                                </li>
+                                <li class="card__list_item">
+                                    <span class="check">
+                                        <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd"
+                                                d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="list_text">SLA Guarantee</span>
+                                </li>
+                            </ul>
+                            <a href="#contact" class="button inline-flex items-center justify-center"
+                                data-plan="Enterprise">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact">
+            <div class="section-inner">
+                <div class="max-w-4xl mx-auto px-6 py-28 mb-28">
+                    <div
+                        class="glass-card contact-card p-10 md:p-14 rounded-2xl text-center border-white/10 relative overflow-hidden reveal">
+                        <h2 class="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">START <span
+                                class="text-accent">IGNITION.</span></h2>
+                        <p class="text-sm text-muted mb-8 max-w-md mx-auto">Limited project slots available.</p>
+
+                        <form class="grid grid-cols-1 gap-5 text-left" id="contact-form">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input type="text" name="name" placeholder="NAME" required
+                                    class="bg-primary/60 border border-white/10 rounded-xl p-4 focus:border-accent outline-none font-mono text-xs text-white transition-all hover:border-white/20" />
+                                <input type="email" name="email" placeholder="EMAIL" required
+                                    class="bg-primary/60 border border-white/10 rounded-xl p-4 focus:border-accent outline-none font-mono text-xs text-white transition-all hover:border-white/20" />
+                            </div>
+                            <div>
+                                <label for="plan" class="sr-only">Plan</label>
+                                <select id="plan" name="plan" required
+                                    class="bg-primary/60 border border-white/10 rounded-xl p-4 focus:border-accent outline-none font-mono text-xs text-white transition-all hover:border-white/20 w-full">
+                                    <option value="" disabled selected>SELECT PLAN</option>
+                                    <option value="Starter">STARTER</option>
+                                    <option value="Professional">PROFESSIONAL</option>
+                                    <option value="Enterprise">ENTERPRISE</option>
+                                </select>
+                            </div>
+                            <input type="tel" name="phone" placeholder="PHONE - 0555555"
+                                data-i18n-placeholder="placeholder_phone"
+                                class="bg-primary/60 border border-white/10 rounded-xl p-4 focus:border-accent outline-none font-mono text-xs text-white transition-all hover:border-white/20" />
+                            <textarea name="message" placeholder="MESSAGE" required rows="4"
+                                class="bg-primary/60 border border-white/10 rounded-xl p-4 focus:border-accent outline-none font-mono text-xs text-white transition-all hover:border-white/20"></textarea>
+                            <button type="submit"
+                                class="py-4 bg-accent text-primary font-black text-lg rounded-xl hover:shadow-[0_0_30px_rgba(204,255,0,0.4)] hover:scale-105 transition-all uppercase">Engage</button>
+                        </form>
+
+                        <div class="mt-6 pt-4 border-t border-white/5">
+                            <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-4">
+                                <a href="mailto:contact.bkeeprslabs@gmail.com"
+                                    class="flex items-center gap-2 font-mono text-[10px] text-muted hover:text-accent uppercase tracking-widest transition-all group">
+                                    <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                    contact.bkeeprslabs@gmail.com
+                                </a>
+                                <a href="tel:+213558317386"
+                                    class="flex items-center gap-2 font-mono text-[10px] text-muted hover:text-accent uppercase tracking-widest transition-all group">
+                                    <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
+                                    +213 558 317 386
+                                </a>
+                            </div>
+                            <div class="flex justify-center gap-8">
+                                <a href="#"
+                                    class="font-mono text-[9px] text-muted hover:text-accent uppercase tracking-widest transition-colors">Instagram</a>
+                                <a href="https://wa.me/213558317386"
+                                    class="font-mono text-[9px] text-muted hover:text-accent uppercase tracking-widest transition-colors">WhatsApp</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <section id="end">
+            <div class="section-inner">
+                <footer class="pt-20 pb-20 border-t border-white/5 mt-0">
+                    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-12">
+                        <div class="flex items-center gap-4">
+                            <div class="logo-container">
+                                <img src="logo green.svg" alt="BKEEPRS Logo" class="w-10 h-10 object-contain"
+                                    style="background: transparent;" />
+                            </div>
+                            <div>
+                                <span
+                                    class="text-2xl font-black text-white uppercase tracking-tighter mb-2 block">BKEEPRS<span
+                                        class="text-accent">.</span></span>
+                                <p class="text-muted font-mono text-[10px] uppercase tracking-widest">© 2024 BKEEPRS —
+                                    ELITE TECHNICAL SYSTEMS</p>
+                                <div class="mt-3 flex flex-col gap-1">
+                                    <a href="mailto:contact.bkeeprslabs@gmail.com"
+                                        class="font-mono text-[9px] text-muted hover:text-accent transition-colors">contact.bkeeprslabs@gmail.com</a>
+                                    <a href="tel:+213558317386"
+                                        class="font-mono text-[9px] text-muted hover:text-accent transition-colors">+213
+                                        558 317 386</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-12">
+                            <a href="#"
+                                class="font-mono text-[10px] text-muted hover:text-accent uppercase tracking-widest transition-colors">Instagram</a>
+                            <a href="https://wa.me/213558317386"
+                                class="font-mono text-[10px] text-muted hover:text-accent uppercase tracking-widest transition-colors">WhatsApp</a>
+                            <a href="#"
+                                class="font-mono text-[10px] text-muted hover:text-accent uppercase tracking-widest transition-colors">GitHub</a>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </main>
+
+    <!-- Back to Top -->
+    <button id="btt"
+        class="fixed bottom-10 right-10 w-12 h-12 bg-accent text-primary rounded-full flex items-center justify-center shadow-2xl transition-all scale-0 opacity-0 z-50 hover:scale-110 active:scale-90">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <script>
+        // Generate starry night sky box-shadows
+        function generateStarShadows(count) {
+            let shadows = '';
+            for (let i = 0; i < count; i++) {
+                const x = Math.floor(Math.random() * 2000);
+                const y = Math.floor(Math.random() * 2000);
+                shadows += (shadows ? ', ' : '') + `${x}px ${y}px #FFF`;
+            }
+            return shadows;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Stars ---
+            const stars = document.getElementById('stars');
+            const stars2 = document.getElementById('stars2');
+            const stars3 = document.getElementById('stars3');
+
+            if (stars) {
+                stars.style.boxShadow = generateStarShadows(700);
+                const starsAfter = document.createElement('div');
+                starsAfter.style.cssText = 'position:absolute; top:2000px; width:1px; height:1px; background:transparent;';
+                starsAfter.style.boxShadow = generateStarShadows(700);
+                stars.appendChild(starsAfter);
+            }
+            if (stars2) {
+                stars2.style.boxShadow = generateStarShadows(200);
+                const stars2After = document.createElement('div');
+                stars2After.style.cssText = 'position:absolute; top:2000px; width:2px; height:2px; background:transparent;';
+                stars2After.style.boxShadow = generateStarShadows(200);
+                stars2.appendChild(stars2After);
+            }
+            if (stars3) {
+                stars3.style.boxShadow = generateStarShadows(100);
+                const stars3After = document.createElement('div');
+                stars3After.style.cssText = 'position:absolute; top:2000px; width:3px; height:3px; background:transparent;';
+                stars3After.style.boxShadow = generateStarShadows(100);
+                stars3.appendChild(stars3After);
+            }
+
+            // --- Intro word highlighting on scroll (ONLY color changes) ---
+            const intro = document.getElementById('intro');
+            const wordItems = intro ? Array.from(intro.querySelectorAll('.intro-list li')) : [];
+
+            if (intro && wordItems.length) {
+                intro.style.setProperty('--steps', String(wordItems.length));
+
+                // Desktop-only scroll-driven word highlight (prevents mobile weird spacing)
+                const isDesktop = () => window.matchMedia('(min-width: 1024px)').matches;
+
+                const getStepPx = () => {
+                    // how much scroll = one word
+                    if (isDesktop()) {
+                        return Math.max(90, Math.min(170, Math.round(window.innerHeight * 0.14)));
+                    } else {
+                        // Smaller steps on mobile for quicker word transitions
+                        return Math.max(60, Math.min(120, Math.round(window.innerHeight * 0.1)));
+                    }
+                };
+
+                const setActive = (idx) => {
+                    const safe = Math.max(0, Math.min(wordItems.length - 1, idx));
+                    wordItems.forEach((li, i) => li.classList.toggle('is-active', i === safe));
+                };
+
+                const applyScrollSpace = () => {
+                    const stepPx = getStepPx();
+                    const extra = stepPx * (wordItems.length - 1);
+
+                    if (isDesktop()) {
+                        intro.style.minHeight = '100vh';
+                        intro.style.paddingBottom = `${extra}px`;
+                    } else {
+                        // Mobile: Add enough padding to scroll through all words
+                        intro.style.minHeight = '';
+                        intro.style.paddingBottom = `${Math.max(extra, 150)}px`;
+                    }
+                };
+
+                let ticking = false;
+
+                const updateActiveWord = () => {
+                    const stepPx = getStepPx();
+                    const introTop = intro.offsetTop;
+                    const scrollY = window.scrollY || window.pageYOffset || 0;
+
+                    // Calculate how far we've scrolled into the intro section
+                    const within = scrollY - introTop;
+
+                    // Calculate which word should be active based on scroll position
+                    const idx = Math.round(within / stepPx);
+                    setActive(idx);
+
+                    ticking = false;
+                };
+
+                const onScroll = () => {
+                    if (!ticking) {
+                        ticking = true;
+                        requestAnimationFrame(updateActiveWord);
+                    }
+                };
+
+                applyScrollSpace();
+                setActive(0);
+                updateActiveWord();
+
+                window.addEventListener('scroll', onScroll, { passive: true });
+                window.addEventListener('resize', () => {
+                    applyScrollSpace();
+                    updateActiveWord();
+                }, { passive: true });
+            }
+
+            // --- Pricing currency toggle (DA / USD) ---
+            const currencyButtons = Array.from(document.querySelectorAll('.currency-btn'));
+            const priceEls = Array.from(document.querySelectorAll('.pricing-price .amount'));
+
+            const setCurrency = (currency) => {
+                currencyButtons.forEach((b) => {
+                    const active = b.dataset.currency === currency;
+                    b.classList.toggle('is-active', active);
+                    b.setAttribute('aria-selected', active ? 'true' : 'false');
+                });
+
+                priceEls.forEach((el) => {
+                    const next = currency === 'usd'
+                        ? el.getAttribute('data-price-usd')
+                        : el.getAttribute('data-price-dzd');
+                    if (next) el.textContent = next;
+                });
+            };
+
+            currencyButtons.forEach((btn) => {
+                btn.addEventListener('click', () => setCurrency(btn.dataset.currency));
+            });
+
+            // default
+            setCurrency('dzd');
+
+            // --- Reveal (legacy) ---
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('active');
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+            // --- Intersect Motion System ---
+            const intersectObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !entry.target.classList.contains('intersect-active')) {
+                        const delayMatch = entry.target.className.match(/intersect:motion-delay-\[(\d+)ms\]/);
+                        const delay = delayMatch ? parseInt(delayMatch[1], 10) : 0;
+                        setTimeout(() => entry.target.classList.add('intersect-active'), delay);
+                        intersectObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.12,
+                rootMargin: '0px 0px -80px 0px'
+            });
+            document.querySelectorAll('[class*="intersect:motion-preset"]').forEach(el => intersectObserver.observe(el));
+
+            // --- Work cards click-through ---
+            document.querySelectorAll('.work-item[data-href]').forEach(card => {
+                card.addEventListener('click', () => {
+                    const href = card.getAttribute('data-href');
+                    if (href) window.location.href = href;
+                });
+            });
+
+            // --- Pricing -> Contact: auto-select plan ---
+            const planSelect = document.getElementById('plan');
+            document.querySelectorAll('#pricing a.button[data-plan]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const plan = btn.getAttribute('data-plan');
+                    if (planSelect && plan) planSelect.value = plan;
+                });
+            });
+
+            // --- Navbar glass + Back to top ---
+            const navInner = document.getElementById('nav-inner');
+            const btt = document.getElementById('btt');
+
+            const setNavState = () => {
+                const scrolled = (window.scrollY || 0) > 12;
+                if (navInner) {
+                    if (scrolled) {
+                        navInner.classList.add('glass-card');
+                        navInner.style.background = 'rgba(10,11,13,0.55)';
+                        navInner.style.backdropFilter = 'blur(10px)';
+                        navInner.style.border = '1px solid rgba(255,255,255,0.06)';
+                    } else {
+                        navInner.classList.remove('glass-card');
+                        navInner.style.background = 'transparent';
+                        navInner.style.backdropFilter = 'none';
+                        navInner.style.border = 'none';
+                    }
+                }
+
+                if (btt) {
+                    if (scrolled) {
+                        btt.classList.remove('scale-0', 'opacity-0');
+                        btt.classList.add('scale-100', 'opacity-100');
+                    } else {
+                        btt.classList.add('scale-0', 'opacity-0');
+                        btt.classList.remove('scale-100', 'opacity-100');
+                    }
+                }
+            };
+
+            setNavState();
+            window.addEventListener('scroll', setNavState, { passive: true });
+
+            if (btt) {
+                btt.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+
+            // --- Mobile menu toggle ---
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            const closeMobileMenu = () => {
+                if (!mobileMenu) return;
+                mobileMenu.classList.add('hidden');
+                menuToggle?.setAttribute('aria-expanded', 'false');
+            };
+
+            if (menuToggle && mobileMenu) {
+                menuToggle.setAttribute('aria-expanded', 'false');
+
+                menuToggle.addEventListener('click', () => {
+                    const isHidden = mobileMenu.classList.contains('hidden');
+                    mobileMenu.classList.toggle('hidden');
+                    menuToggle.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+                });
+
+                mobileMenu.querySelectorAll('a[href^="#"]').forEach(a => {
+                    a.addEventListener('click', closeMobileMenu);
+                });
+
+                document.addEventListener('click', (e) => {
+                    const target = e.target;
+                    const clickedToggle = menuToggle.contains(target);
+                    const clickedMenu = mobileMenu.contains(target);
+                    if (!clickedToggle && !clickedMenu) closeMobileMenu();
+                });
+            }
+
+            // --- Contact form mailto ---
+            const contactForm = document.getElementById('contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const form = e.target;
+                    const formData = new FormData(form);
+
+                    const name = formData.get('name');
+                    const email = formData.get('email');
+                    const phone = formData.get('phone') || '';
+                    const message = formData.get('message');
+                    const plan = formData.get('plan') || 'Not specified';
+
+                    const subject = encodeURIComponent(`New Contact from ${name}`);
+                    const body = encodeURIComponent(`Plan: ${plan}\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}`);
+                    window.location.href = `mailto:contact.bkeeprslabs@gmail.com?subject=${subject}&body=${body}`;
+
+                    const button = form.querySelector('button[type="submit"]');
+                    if (button) {
+                        const originalText = button.textContent;
+                        button.textContent = 'SIGNAL TRANSMITTED ✓';
+                        button.classList.add('bg-green-500');
+                        setTimeout(() => {
+                            button.textContent = originalText;
+                            button.classList.remove('bg-green-500');
+                            form.reset();
+
+                            // keep plan if set
+                            if (planSelect && plan && plan !== 'Not specified') {
+                                planSelect.value = plan;
+                            }
+                        }, 2500);
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+        // =============================================
+        // MOBILE + DESKTOP SCROLL WORD HIGHLIGHT
+        // =============================================
+        (function initScrollWordHighlight() {
+            const intro = document.getElementById('intro');
+            const wordItems = intro ? Array.from(intro.querySelectorAll('.intro-list li')) : [];
+            if (!intro || !wordItems.length) return;
+
+            const setActive = (idx) => {
+                const safe = Math.max(0, Math.min(wordItems.length - 1, idx));
+                wordItems.forEach((li, i) => li.classList.toggle('is-active', i === safe));
+            };
+
+            // Calculate step size based on viewport
+            const getStepPx = () => Math.max(80, Math.min(150, Math.round(window.innerHeight * 0.12)));
+
+            // Get the fixed hero element
+            const introSticky = document.querySelector('.intro-sticky');
+
+            // Apply dynamic padding to enable scrolling through all words
+            const applyScrollSpace = () => {
+                const stepPx = getStepPx();
+                const extraPadding = stepPx * (wordItems.length - 1);
+                // Add padding to #intro so user can scroll through all words
+                intro.style.paddingBottom = `${Math.max(extraPadding, 100)}px`;
+
+                // Update RTL positioning for fixed hero
+                if (introSticky && window.innerWidth >= 1024) {
+                    const isRTL = document.documentElement.dir === 'rtl';
+                    if (isRTL) {
+                        // Move hero to the RIGHT side for RTL
+                        introSticky.style.left = 'auto';
+                        introSticky.style.right = 'max(1.5rem, calc((100vw - 80rem) / 2 + 1.5rem))';
+                        introSticky.style.textAlign = 'right';
+                    } else {
+                        // Move hero to the LEFT side for LTR
+                        introSticky.style.left = 'max(1.5rem, calc((100vw - 80rem) / 2 + 1.5rem))';
+                        introSticky.style.right = 'auto';
+                        introSticky.style.textAlign = 'left';
+                    }
+                }
+            };
+
+            let ticking = false;
+
+            const updateActiveWord = () => {
+                const stepPx = getStepPx();
+                const introTop = intro.offsetTop;
+                const scrollY = window.scrollY || window.pageYOffset || 0;
+                const introBottom = introTop + intro.offsetHeight;
+                const within = scrollY - introTop;
+                const idx = Math.round(within / stepPx);
+                setActive(idx);
+
+                // Hide/show fixed hero based on scroll position
+                // Fade out BEFORE hitting the next section
+                if (introSticky && window.innerWidth >= 1024) {
+                    const viewportHeight = window.innerHeight;
+                    // Hide when we've scrolled past ~60% of intro section
+                    const shouldHide = scrollY > introBottom - viewportHeight * 0.7;
+                    introSticky.classList.toggle('is-hidden', shouldHide);
+                }
+
+                ticking = false;
+            };
+
+            const onScroll = () => {
+                if (!ticking) {
+                    ticking = true;
+                    requestAnimationFrame(updateActiveWord);
+                }
+            };
+
+            // Initialize
+            applyScrollSpace();
+            setActive(0);
+            updateActiveWord();
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', () => {
+                applyScrollSpace();
+                updateActiveWord();
+            }, { passive: true });
+        })();
+
+        // =============================================
+        // FULL I18N SYSTEM (EN/AR)
+        // =============================================
+        (function initI18n() {
+            const I18N = {
+                en: {
+                    // Navbar
+                    nav_about: 'ABOUT',
+                    nav_work: 'WORK',
+                    nav_pricing: 'PRICING',
+                    cta_start_project: 'START PROJECT',
+                    // Hero
+                    hero_title: 'BUILT FOR<br/>IMPACT<span class="text-accent">.</span>',
+                    hero_subtitle: 'Professional engineering. Enterprise-grade execution.',
+                    hero_kicker: 'We build <em>professional, high-conversion websites</em> for founders who want speed, performance & results — without agency bloat.',
+                    // Scrolling Words
+                    word_engineer: 'ENGINEER<span class="text-accent">.</span>',
+                    word_automate: 'AUTOMATE<span class="text-accent">.</span>',
+                    word_orchestrate: 'ORCHESTRATE AI<span class="text-accent">.</span>',
+                    word_optimize: 'OPTIMIZE<span class="text-accent">.</span>',
+                    word_secure: 'SECURE<span class="text-accent">.</span>',
+                    word_scale: 'SCALE<span class="text-accent">.</span>',
+                    word_deliver: 'DELIVER<span class="text-accent">.</span>',
+                    word_ship: 'SHIP<span class="text-accent">.</span>',
+                    // About
+                    about_kicker: 'The Lab',
+                    about_title: 'BUILT FOR THE <br/>TECHNICAL <span class="text-accent">ELITE.</span>',
+                    about_body: 'Bkeeprs is a technical collective for founders who value engineering over agency bloat. We eliminate the middlemen to deliver sub-second solutions.',
+                    about_feature1_title: 'RADICAL SPEED',
+                    about_feature1_body: 'We build in weeks, not months. Speed is the only currency that matters in a technical race.',
+                    about_feature2_title: 'ELITE CODE',
+                    about_feature2_body: 'Clean, documented, and bulletproof architecture built to outlast your competition.',
+                    about_stat: '100%',
+                    about_stat_label: 'Direct Engineering',
+                    // Work
+                    work_kicker: 'Our Work',
+                    work_title: 'Our Work — Professional Sites That <span class="text-accent">Convert</span>',
+                    work_subtitle: 'Premium designs built for performance and growth',
+                    work_tag1: 'Agile builds',
+                    work_tag2: 'Clean UX',
+                    work_tag3: 'Fast performance',
+                    work_tag4: 'Enterprise quality',
+                    work1_tag: 'Landing + Dashboard',
+                    work1_subtitle: 'Enterprise Dashboard / Conversion-optimized UI',
+                    work1_body: 'High-conversion product site built for scale. Clean UI, fast performance, and conversion-focused design that drives results.',
+                    work2_tag: 'Brand + Web',
+                    work2_subtitle: 'Brand + Web / Premium creative build',
+                    work2_body: 'Premium agency-style build with elite design systems. Modern aesthetics meet powerful functionality for brands that demand excellence.',
+                    // Benefits
+                    benefits_kicker: 'Why BKEEPRS?',
+                    benefits_title: 'Professional Engineering, <span class="text-accent">Not Templates</span>',
+                    benefits_subtitle: 'Fast delivery, clean code, built for scale & optimization. Enterprise-grade architecture that grows with your business.',
+                    benefit1_title: 'Speed of Delivery',
+                    benefit1_body: 'Live in weeks, not months. Agile development that moves at your pace.',
+                    benefit2_title: 'Performance Optimization',
+                    benefit2_body: 'Pagespeed & SEO-ready. Every build optimized for speed and search.',
+                    benefit3_title: 'UX & Design',
+                    benefit3_body: 'Built for conversion. Every pixel optimized to turn visitors into customers.',
+                    benefit4_title: 'Scalability',
+                    benefit4_body: 'Architecture that grows. Built to scale from startup to enterprise.',
+                    stat1: '50+',
+                    stat1_label: 'Projects Delivered',
+                    stat2: '30+',
+                    stat2_label: 'Companies Served',
+                    stat3: '100%',
+                    stat3_label: 'Client Satisfaction',
+                    benefits_cta: 'Start a Project',
+                    // Pricing
+                    pricing_kicker: 'Pricing',
+                    pricing_title: 'ELITE <span class="text-accent">PRICING.</span>',
+                    pricing_subtitle: 'Choose the plan that fits your needs',
+                    currency_dzd: 'Algeria (DA)',
+                    currency_usd: 'International ($)',
+                    plan_starter: 'Starter',
+                    plan_starter_desc: 'Perfect for small projects and startups.',
+                    plan_pro: 'Professional',
+                    plan_pro_desc: 'For growing businesses and agencies.',
+                    plan_enterprise: 'Enterprise',
+                    plan_enterprise_desc: 'For large organizations and scale.',
+                    feature_basic_website: 'Basic Website',
+                    feature_responsive: 'Responsive Design',
+                    feature_basic_support: 'Basic Support',
+                    feature_seo: 'SEO Optimization',
+                    feature_advanced: 'Advanced Features',
+                    feature_custom_dev: 'Custom Development',
+                    feature_priority_support: 'Priority Support',
+                    feature_dedicated_team: 'Dedicated Team',
+                    feature_247_support: '24/7 Support',
+                    feature_unlimited: 'Unlimited Features',
+                    feature_custom_solutions: 'Custom Solutions',
+                    feature_sla: 'SLA Guarantee',
+                    btn_get_started: 'Get Started',
+                    period_starting: 'starting',
+                    // Contact
+                    contact_title: 'START <span class="text-accent">IGNITION.</span>',
+                    contact_subtitle: 'Limited project slots available.',
+                    placeholder_name: 'NAME',
+                    placeholder_email: 'EMAIL',
+                    placeholder_phone: 'PHONE - 0555555',
+                    placeholder_message: 'MESSAGE',
+                    select_plan: 'SELECT PLAN',
+                    btn_engage: 'Engage',
+                    label_instagram: 'Instagram',
+                    label_whatsapp: 'WhatsApp',
+                    // Footer
+                    footer_copyright: '© 2024 BKEEPRS — ELITE TECHNICAL SYSTEMS',
+                    footer_github: 'GitHub'
+                },
+                ar: {
+                    // Navbar
+                    nav_about: 'من نحن',
+                    nav_work: 'أعمالنا',
+                    nav_pricing: 'الأسعار',
+                    cta_start_project: 'ابدأ مشروعك',
+                    // Hero
+                    hero_title: 'مصمّمون<br/>للأثر<span class="text-accent">.</span>',
+                    hero_subtitle: 'هندسة احترافية. تنفيذ بمستوى المؤسسات.',
+                    hero_kicker: 'نبني <em>مواقع احترافية عالية التحويل</em> للمؤسسين الذين يريدون السرعة والأداء والنتائج — بدون تضخم الوكالات.',
+                    // Scrolling Words (Arabic)
+                    word_engineer: 'نهندس<span class="text-accent">.</span>',
+                    word_automate: 'نؤتمت<span class="text-accent">.</span>',
+                    word_orchestrate: 'نُنسّق الذكاء<span class="text-accent">.</span>',
+                    word_optimize: 'نُحسّن<span class="text-accent">.</span>',
+                    word_secure: 'نُؤمّن<span class="text-accent">.</span>',
+                    word_scale: 'نُوسّع<span class="text-accent">.</span>',
+                    word_deliver: 'نُسلّم<span class="text-accent">.</span>',
+                    word_ship: 'نُطلق<span class="text-accent">.</span>',
+                    // About
+                    about_kicker: 'المختبر',
+                    about_title: 'مصمّم للنخبة<br/><span class="text-accent">التقنية.</span>',
+                    about_body: 'بيكيبرز هو تجمع تقني للمؤسسين الذين يقدرون الهندسة على تضخم الوكالات. نحن نزيل الوسطاء لتقديم حلول بأجزاء من الثانية.',
+                    about_feature1_title: 'سرعة جذرية',
+                    about_feature1_body: 'نبني في أسابيع، ليس أشهر. السرعة هي العملة الوحيدة المهمة في سباق تقني.',
+                    about_feature2_title: 'كود نخبوي',
+                    about_feature2_body: 'بنية نظيفة وموثقة ومضادة للرصاص مصممة لتتفوق على منافسيك.',
+                    about_stat: '100%',
+                    about_stat_label: 'هندسة مباشرة',
+                    // Work
+                    work_kicker: 'أعمالنا',
+                    work_title: 'أعمالنا — مواقع احترافية <span class="text-accent">تحوّل</span>',
+                    work_subtitle: 'تصاميم متميزة مبنية للأداء والنمو',
+                    work_tag1: 'بناء رشيق',
+                    work_tag2: 'تجربة مستخدم نظيفة',
+                    work_tag3: 'أداء سريع',
+                    work_tag4: 'جودة مؤسسية',
+                    work1_tag: 'صفحة هبوط + لوحة تحكم',
+                    work1_subtitle: 'لوحة تحكم مؤسسية / واجهة محسّنة للتحويل',
+                    work1_body: 'موقع منتج عالي التحويل مبني للتوسع. واجهة نظيفة، أداء سريع، وتصميم يركز على التحويل.',
+                    work2_tag: 'علامة تجارية + ويب',
+                    work2_subtitle: 'علامة تجارية + ويب / بناء إبداعي متميز',
+                    work2_body: 'بناء بأسلوب الوكالات المتميزة مع أنظمة تصميم نخبوية. جماليات حديثة تلتقي بوظائف قوية للعلامات التجارية.',
+                    // Benefits
+                    benefits_kicker: 'لماذا بيكيبرز؟',
+                    benefits_title: 'هندسة احترافية، <span class="text-accent">ليست قوالب</span>',
+                    benefits_subtitle: 'تسليم سريع، كود نظيف، مبني للتوسع والتحسين. بنية بمستوى المؤسسات تنمو مع عملك.',
+                    benefit1_title: 'سرعة التسليم',
+                    benefit1_body: 'جاهز في أسابيع، ليس أشهر. تطوير رشيق يتحرك بسرعتك.',
+                    benefit2_title: 'تحسين الأداء',
+                    benefit2_body: 'سرعة صفحة وجاهز للسيو. كل بناء محسّن للسرعة والبحث.',
+                    benefit3_title: 'تجربة المستخدم والتصميم',
+                    benefit3_body: 'مبني للتحويل. كل بكسل محسّن لتحويل الزوار إلى عملاء.',
+                    benefit4_title: 'قابلية التوسع',
+                    benefit4_body: 'بنية تنمو. مبني للتوسع من الشركة الناشئة إلى المؤسسة.',
+                    stat1: '+50',
+                    stat1_label: 'مشروع منجز',
+                    stat2: '+30',
+                    stat2_label: 'شركة خُدمت',
+                    stat3: '100%',
+                    stat3_label: 'رضا العملاء',
+                    benefits_cta: 'ابدأ مشروعًا',
+                    // Pricing
+                    pricing_kicker: 'الأسعار',
+                    pricing_title: 'أسعار <span class="text-accent">نخبوية.</span>',
+                    pricing_subtitle: 'اختر الخطة التي تناسب احتياجاتك',
+                    currency_dzd: 'الجزائر (دج)',
+                    currency_usd: 'دولي ($)',
+                    plan_starter: 'البداية',
+                    plan_starter_desc: 'مثالي للمشاريع الصغيرة والشركات الناشئة.',
+                    plan_pro: 'احترافي',
+                    plan_pro_desc: 'للشركات النامية والوكالات.',
+                    plan_enterprise: 'مؤسسي',
+                    plan_enterprise_desc: 'للمؤسسات الكبيرة والتوسع.',
+                    feature_basic_website: 'موقع أساسي',
+                    feature_responsive: 'تصميم متجاوب',
+                    feature_basic_support: 'دعم أساسي',
+                    feature_seo: 'تحسين محركات البحث',
+                    feature_advanced: 'ميزات متقدمة',
+                    feature_custom_dev: 'تطوير مخصص',
+                    feature_priority_support: 'دعم أولوية',
+                    feature_dedicated_team: 'فريق مخصص',
+                    feature_247_support: 'دعم 24/7',
+                    feature_unlimited: 'ميزات غير محدودة',
+                    feature_custom_solutions: 'حلول مخصصة',
+                    feature_sla: 'ضمان SLA',
+                    btn_get_started: 'ابدأ الآن',
+                    period_starting: 'يبدأ من',
+                    // Contact
+                    contact_title: 'ابدأ <span class="text-accent">الانطلاق.</span>',
+                    contact_subtitle: 'عدد محدود من فتحات المشاريع متاحة.',
+                    placeholder_name: 'الاسم',
+                    placeholder_email: 'البريد الإلكتروني',
+                    placeholder_phone: 'الهاتف - 0555555',
+                    placeholder_message: 'الرسالة',
+                    select_plan: 'اختر الخطة',
+                    btn_engage: 'تواصل',
+                    label_instagram: 'انستغرام',
+                    label_whatsapp: 'واتساب',
+                    // Footer
+                    footer_copyright: '© 2024 بيكيبرز — أنظمة تقنية نخبوية',
+                    footer_github: 'جيت هب'
+                }
+            };
+
+            const langBtns = Array.from(document.querySelectorAll('.lang-btn'));
+            if (!langBtns.length) return;
+
+            const applyLang = (lang) => {
+                const dict = I18N[lang] || I18N.en;
+
+                // Set document language and direction
+                document.documentElement.lang = lang;
+                document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+                // Apply textContent for data-i18n
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (dict[key]) el.textContent = dict[key];
+                });
+
+                // Apply innerHTML for data-i18n-html (for titles with <br> or <span>)
+                document.querySelectorAll('[data-i18n-html]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-html');
+                    if (dict[key]) el.innerHTML = dict[key];
+                });
+
+                // Apply placeholders for data-i18n-placeholder
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    if (dict[key]) el.placeholder = dict[key];
+                });
+
+                // Update active button state
+                langBtns.forEach(b => b.classList.toggle('is-active', b.dataset.lang === lang));
+
+                // Persist selection
+                try { localStorage.setItem('bkeeprs_lang', lang); } catch (e) { }
+
+                // Trigger resize to update hero positioning for RTL/LTR
+                window.dispatchEvent(new Event('resize'));
+            };
+
+            // Add click handlers
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+            });
+
+            // Load saved language or default to English
+            let saved = 'en';
+            try { saved = localStorage.getItem('bkeeprs_lang') || 'en'; } catch (e) { }
+            applyLang(saved);
+        })();
+    </script>

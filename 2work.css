@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbit - Streamline Your Workflow</title>
+    <meta name="description" content="Orbit is the all-in-one platform to manage your projects, team, and goals.">
+    
+    <style>
+        /* CSS Reset & Variables */
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #64748b;
+            --bg-body: #f8fafc;
+            --bg-surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-full: 9999px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Utilities */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--secondary);
+            background-color: white;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+        }
+
+        .text-center { text-align: center; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .flex-col { flex-direction: column; }
+        .gap-4 { gap: 1rem; }
+        .gap-8 { gap: 2rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mb-12 { margin-bottom: 3rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-8 { margin-top: 2rem; }
+        
+        section {
+            padding: 5rem 0;
+        }
+
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        h1 { font-size: 3rem; margin-bottom: 1.5rem; }
+        h2 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        p { color: var(--text-muted); margin-bottom: 1rem; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 1.875rem; }
+            section { padding: 3rem 0; }
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            padding: 0.75rem 0;
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: -0.025em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; } /* Simplified mobile handling */
+            .nav-actions { display: none; }
+            .mobile-menu-btn { display: block; }
+        }
+
+        /* Hero */
+        .hero {
+            padding-top: 8rem;
+            padding-bottom: 4rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .mockup-container {
+            max-width: 900px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .mockup-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg), 0 0 0 1px var(--border);
+            padding: 1rem;
+            transform: rotateX(5deg) scale(0.95);
+            transition: transform 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+        }
+
+        .hero:hover .mockup-card {
+            transform: rotateX(0) scale(1);
+        }
+
+        /* CSS Drawing of UI */
+        .ui-header { height: 40px; border-bottom: 1px solid var(--border); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; padding: 0 1rem; }
+        .ui-dot { width: 10px; height: 10px; border-radius: 50%; background: #e2e8f0; }
+        .ui-dot.red { background: #fca5a5; }
+        .ui-dot.yellow { background: #fcd34d; }
+        .ui-dot.green { background: #86efac; }
+        
+        .ui-body { display: flex; gap: 1rem; height: calc(100% - 56px); }
+        .ui-sidebar { width: 20%; background: #f1f5f9; border-radius: var(--radius-md); }
+        .ui-main { flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+        .ui-bar { height: 1rem; background: #f1f5f9; border-radius: 4px; width: 100%; }
+        .ui-bar.w-50 { width: 50%; }
+        .ui-bar.w-75 { width: 75%; }
+        .ui-card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+        .ui-mini-card { height: 100px; border: 1px solid var(--border); border-radius: var(--radius-md); p-4; }
+
+        /* Social Proof */
+        .social-proof {
+            padding: 2rem 0;
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo-row {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            color: #94a3b8;
+            font-weight: 700;
+            font-size: 1.25rem;
+            text-transform: uppercase;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--bg-surface);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: #e0e7ff;
+            color: var(--primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Pricing */
+        .pricing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(24px); }
+        input:focus + .slider { box-shadow: 0 0 1px var(--primary); }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .pricing-card {
+            background: var(--bg-surface);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .pricing-card.popular {
+            border: 2px solid var(--primary);
+            box-shadow: var(--shadow-lg);
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 1.5rem 0 0.5rem;
+        }
+
+        .price-period {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .check-icon {
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        /* Testimonials */
+        .testimonial-slider {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+            min-height: 300px;
+        }
+
+        .testimonial-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .testimonial-card {
+            min-width: 100%;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .testimonial-text {
+            font-size: 1.5rem;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .slider-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .slider-btn {
+            background: white;
+            border: 1px solid var(--border);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .slider-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* FAQ */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-button {
+            width: 100%;
+            padding: 1.5rem 0;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.125rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-main);
+        }
+
+        .faq-button:hover {
+            color: var(--primary);
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            color: var(--text-muted);
+        }
+        
+        .faq-content p {
+            padding-bottom: 1.5rem;
+        }
+
+        .chevron {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-button[aria-expanded="true"] .chevron {
+            transform: rotate(180deg);
+        }
+
+        /* Final CTA */
+        .cta-section {
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: 4rem 2rem;
+            text-align: center;
+            margin: 2rem 1.5rem;
+        }
+
+        .cta-section h2 { color: white; }
+        .cta-section p { color: #e0e7ff; margin-bottom: 2rem; }
+        .cta-section .btn { background: white; color: var(--primary); }
+        .cta-section .btn:hover { background: #f1f5f9; }
+
+        /* Footer */
+        footer {
+            background: white;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-backdrop.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            position: relative;
+            margin: 1rem;
+        }
+
+        .modal-backdrop.open .modal {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .toast {
+            background: white;
+            border-left: 4px solid #10b981;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease forwards;
+            min-width: 300px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(10px); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-content">
+            <a href="#" class="logo">Orbit</a>
+            <div class="nav-actions flex items-center gap-8">
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+                <button class="btn btn-primary js-open-modal" data-plan="free">Get Started</button>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Manage projects without the chaos.</h1>
+                <p style="font-size: 1.25rem;">Orbit brings your team, tasks, and tools together in one place. Stop switching tabs and start getting things done.</p>
+                <div class="flex justify-center gap-4 mt-8">
+                    <button class="btn btn-primary btn-large js-open-modal" data-plan="free">Start Free</button>
+                    <a href="#features" class="btn btn-outline btn-large">See Demo</a>
+                </div>
+            </div>
+            
+            <!-- CSS Only Mockup -->
+            <div class="mockup-container">
+                <div class="mockup-card">
+                    <div class="ui-header">
+                        <div class="ui-dot red"></div>
+                        <div class="ui-dot yellow"></div>
+                        <div class="ui-dot green"></div>
+                    </div>
+                    <div class="ui-body">
+                        <div class="ui-sidebar"></div>
+                        <div class="ui-main">
+                            <div class="ui-bar w-75" style="height: 2rem; background: #e2e8f0;"></div>
+                            <div class="ui-card-grid">
+                                <div class="ui-mini-card"></div>
+                                <div class="ui-mini-card"></div>
+                                <div class="ui-mini-card"></div>
+                                <div class="ui-mini-card"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Social Proof -->
+    <section class="social-proof">
+        <div class="container">
+            <div class="logo-row">
+                <span>Acme Corp</span>
+                <span>GlobalBank</span>
+                <span>NextGen</span>
+                <span>Starlight</span>
+                <span>Umberlla</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" style="background-color: white;">
+        <div class="container">
+            <div class="text-center mb-12">
+                <h2>Everything you need</h2>
+                <p>Powerful features to help you grow.</p>
+            </div>
+            <div class="features-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </div>
+                    <h3>Task Management</h3>
+                    <p>Organize, prioritize, and track work with flexible kanban boards and lists.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <h3>Time Tracking</h3>
+                    <p>Built-in timers and timesheets to keep your projects on budget and schedule.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3>Team Collaboration</h3>
+                    <p>Real-time comments, file sharing, and mentions to keep everyone in sync.</p>
+                </div>
+                <!-- Feature 4 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    </div>
+                    <h3>Analytics</h3>
+                    <p>Gain insights into team performance with detailed dashboards and reports.</p>
+                </div>
+                <!-- Feature 5 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <h3>Security</h3>
+                    <p>Enterprise-grade security with SSO, 2FA, and data encryption at rest.</p>
+                </div>
+                <!-- Feature 6 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <h3>Integrations</h3>
+                    <p>Connect with your favorite tools like Slack, GitHub, Figma, and more.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing">
+        <div class="container">
+            <div class="text-center mb-8">
+                <h2>Simple, transparent pricing</h2>
+                <div class="pricing-toggle">
+                    <span id="monthly-label" style="font-weight: 600;">Monthly</span>
+                    <label class="switch">
+                        <input type="checkbox" id="pricing-switch" aria-label="Toggle Monthly/Yearly pricing">
+                        <span class="slider"></span>
+                    </label>
+                    <span id="yearly-label">Yearly <span style="color: #10b981; font-size: 0.875rem; font-weight: 600;">(Save 20%)</span></span>
+                </div>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Starter -->
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <p>For individuals.</p>
+                    <div class="price">$0</div>
+                    <div class="price-period">Forever free</div>
+                    <ul class="feature-list">
+                        <li><span class="check-icon">✓</span> Up to 3 projects</li>
+                        <li><span class="check-icon">✓</span> 1 User</li>
+                        <li><span class="check-icon">✓</span> Basic support</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width: 100%" onclick="openModal('Starter')">Choose Plan</button>
+                </div>
+                
+                <!-- Pro -->
+                <div class="pricing-card popular">
+                    <div class="badge">Most Popular</div>
+                    <h3>Pro</h3>
+                    <p>For growing teams.</p>
+                    <div class="price js-price" data-monthly="29" data-yearly="24">$29</div>
+                    <div class="price-period js-period">per user/month</div>
+                    <ul class="feature-list">
+                        <li><span class="check-icon">✓</span> Unlimited projects</li>
+                        <li><span class="check-icon">✓</span> Up to 10 users</li>
+                        <li><span class="check-icon">✓</span> Advanced analytics</li>
+                        <li><span class="check-icon">✓</span> Priority support</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%" onclick="openModal('Pro')">Choose Plan</button>
+                </div>
+
+                <!-- Team -->
+                <div class="pricing-card">
+                    <h3>Team</h3>
+                    <p>For large organizations.</p>
+                    <div class="price js-price" data-monthly="99" data-yearly="79">$99</div>
+                    <div class="price-period js-period">per user/month</div>
+                    <ul class="feature-list">
+                        <li><span class="check-icon">✓</span> Unlimited users</li>
+                        <li><span class="check-icon">✓</span> SSO & Security</li>
+                        <li><span class="check-icon">✓</span> Custom integrations</li>
+                        <li><span class="check-icon">✓</span> Dedicated account manager</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width: 100%" onclick="openModal('Team')">Choose Plan</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" style="background: white;">
+        <div class="container">
+            <h2 class="text-center mb-12">Trusted by thousands</h2>
+            
+            <div class="testimonial-slider">
+                <div class="testimonial-track" id="track">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"Orbit completely transformed how our team collaborates. We ship faster and with less stress."</p>
+                        <div class="testimonial-author">- Sarah Jenkins, CTO at TechFlow</div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"The best project management tool I've used in 10 years. Clean, fast, and intuitive."</p>
+                        <div class="testimonial-author">- Mark Davis, Product Manager</div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"Customer support is amazing, and the features are exactly what we needed to scale."</p>
+                        <div class="testimonial-author">- Emily Chen, Founder of StartUp</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slider-nav">
+                <button class="slider-btn" id="prev-btn" aria-label="Previous testimonial">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <button class="slider-btn" id="next-btn" aria-label="Next testimonial">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+        <div class="container">
+            <h2 class="text-center mb-12">Frequently Asked Questions</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-button" aria-expanded="false">
+                        Is there a free trial?
+                        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Yes! Our Starter plan is free forever. For Pro and Team plans, we offer a 14-day free trial with no credit card required.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-button" aria-expanded="false">
+                        Can I change plans anytime?
+                        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Absolutely. You can upgrade or downgrade your plan at any time from your account settings.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-button" aria-expanded="false">
+                        What payment methods do you accept?
+                        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>We accept all major credit cards (Visa, Mastercard, Amex) and PayPal. For enterprise customers, we support invoicing.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-button" aria-expanded="false">
+                        Is my data secure?
+                        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Security is our priority. We use bank-level encryption, regular backups, and strict access controls to keep your data safe.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <div class="container">
+        <div class="cta-section">
+            <h2>Ready to boost your productivity?</h2>
+            <p>Join thousands of teams using Orbit today.</p>
+            <button class="btn js-open-modal" data-plan="free">Get Started for Free</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">Careers</a>
+                <a href="#">Blog</a>
+                <a href="#">Legal</a>
+                <a href="#">Contact</a>
+            </div>
+            <p>&copy; 2023 Orbit Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal-backdrop" id="modal-backdrop">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <button class="modal-close" id="modal-close" aria-label="Close modal">×</button>
+            <h2 id="modal-title" style="margin-bottom: 1.5rem; font-size: 1.5rem;">Get started with Orbit</h2>
+            
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" id="name" class="form-input" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-input" required placeholder="john@company.com">
+                </div>
+                <div class="form-group">
+                    <label for="plan" class="form-label">Selected Plan</label>
+                    <select id="plan" class="form-select">
+                        <option value="Starter">Starter (Free)</option>
+                        <option value="Pro">Pro</option>
+                        <option value="Team">Team</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-checkbox">
+                        <input type="checkbox" required>
+                        I agree to the Terms of Service and Privacy Policy.
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        // DOM Elements
+        const navbar = document.getElementById('navbar');
+        const pricingSwitch = document.getElementById('pricing-switch');
+        const prices = document.querySelectorAll('.js-price');
+        const periods = document.querySelectorAll('.js-period');
+        
+        // Sticky Navbar Logic
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Pricing Toggle Logic
+        pricingSwitch.addEventListener('change', () => {
+            const isYearly = pricingSwitch.checked;
+            
+            prices.forEach(price => {
+                const amount = isYearly ? price.dataset.yearly : price.dataset.monthly;
+                price.textContent = `$${amount}`;
+                // Animate change
+                price.style.transform = 'scale(1.1)';
+                setTimeout(() => price.style.transform = 'scale(1)', 200);
+            });
+
+            periods.forEach(period => {
+                period.textContent = isYearly ? 'per user/month (billed yearly)' : 'per user/month';
+            });
+        });
+
+        // Testimonial Slider Logic
+        const track = document.getElementById('track');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slides = document.querySelectorAll('.testimonial-card');
+        let currentIndex = 0;
+
+        function updateSlider() {
+            const width = slides[0].clientWidth; // Dynamically get width
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateSlider();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            updateSlider();
+        });
+
+        // Window resize fix for slider
+        window.addEventListener('resize', updateSlider);
+
+        // FAQ Accordion Logic
+        document.querySelectorAll('.faq-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const expanded = button.getAttribute('aria-expanded') === 'true';
+                
+                // Close all others
+                document.querySelectorAll('.faq-button').forEach(btn => {
+                    btn.setAttribute('aria-expanded', 'false');
+                    btn.nextElementSibling.style.maxHeight = null;
+                });
+
+                // Toggle current
+                if (!expanded) {
+                    button.setAttribute('aria-expanded', 'true');
+                    const content = button.nextElementSibling;
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            });
+        });
+
+        // Modal Logic
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalClose = document.getElementById('modal-close');
+        const planSelect = document.getElementById('plan');
+        const openBtns = document.querySelectorAll('.js-open-modal');
+        // Add global function for the onclick handlers in pricing cards
+        window.openModal = function(planName) {
+            planSelect.value = planName;
+            modalBackdrop.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent bg scrolling
+            document.getElementById('name').focus();
+        };
+
+        openBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const plan = btn.dataset.plan === 'free' ? 'Starter' : 'Starter';
+                openModal(plan);
+            });
+        });
+
+        function closeModal() {
+            modalBackdrop.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modalBackdrop.addEventListener('click', (e) => {
+            if (e.target === modalBackdrop) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalBackdrop.classList.contains('open')) closeModal();
+        });
+
+        // Form Validation & Toast Logic
+        const form = document.getElementById('signup-form');
+        const toastContainer = document.getElementById('toast-container');
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span>${message}</span>
+            `;
+            
+            toastContainer.appendChild(toast);
+
+            // Remove after animation
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Basic validation is handled by HTML5 attributes (required, type=email)
+            // Simulating API call...
+            
+            const btn = form.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
+            btn.textContent = 'Creating...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                closeModal();
+                showToast("You're in! Welcome to Orbit.");
+                form.reset();
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }, 1000);
+        });
+
+    </script>
+</body>
+</html>
