@@ -11,6 +11,25 @@
     <link rel="icon" href="/image.png" sizes="16x16" type="image/png">
     <link rel="apple-touch-icon" href="/image.png" sizes="180x180">
     <meta name="theme-color" content="#050505">
+    <meta name="description"
+        content="BKEEPRS | Elite Technical Engineering. We build professional, high-conversion websites for founders who want speed, performance & results.">
+    <meta name="keywords"
+        content="web development, software engineering, algeria, tech, startup, saas, fintech, real estate">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bkeeprs.website/">
+    <meta property="og:title" content="BKEEPRS | Elite Technical Engineering">
+    <meta property="og:description"
+        content="Professional engineering. Enterprise-grade execution. Built for founders who value performance over bloat.">
+    <meta property="og:image" content="https://bkeeprs.website/image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://bkeeprs.website/">
+    <meta property="twitter:title" content="BKEEPRS | Elite Technical Engineering">
+    <meta property="twitter:description" content="Professional engineering. Enterprise-grade execution.">
+    <meta property="twitter:image" content="https://bkeeprs.website/image.png">
 
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2708,7 +2727,7 @@
             <div class="noise"></div>
 
             <!-- Video Background -->
-            <video class="app-video-bg" autoplay loop muted playsinline>
+            <video class="app-video-bg" autoplay loop muted playsinline preload="none">
                 <source src="Untitled design (1).mp4" type="video/mp4">
             </video>
 
@@ -2743,7 +2762,7 @@
                     <!-- Left: Video -->
                     <div class="showcase-container intersect:motion-preset-slide-right intersect:motion-delay-[200ms]">
                         <img src="beetravel-logo.png" alt="BeeTravel Logo" class="showcase-logo">
-                        <video class="showcase-video" autoplay loop muted playsinline>
+                        <video class="showcase-video" autoplay loop muted playsinline preload="none">
                             <source src="app presentation2.mp4" type="video/mp4">
                         </video>
                         <div class="showcase-meta">
@@ -4522,48 +4541,52 @@
     </script>
 
 
-    // =============================================
-    // BRUTAL SCROLL SECTION LOGIC
-    // =============================================
-    (function initBrutalScroll() {
-    const section = document.getElementById('brutal-apps-section');
-    if (!section) return; // Exit if section removed
+    <script>
+        // =============================================
+        // BRUTAL SCROLL SECTION LOGIC
+        // =============================================
+        (function initBrutalScroll() {
+            const section = document.getElementById('brutal-apps-section');
+            if (!section) return; // Exit if section removed
 
-    // Ensure elements exist
-    let world = document.getElementById('bs-world');
-    let viewport = document.getElementById('bs-viewport');
+            // Ensure elements exist
+            let world = document.getElementById('bs-world');
+            let viewport = document.getElementById('bs-viewport');
 
-    // If they don't exist (maybe stripped?), re-inject them?
-    // Better: Assume HTML is correct.
+            // If they don't exist (maybe stripped?), re-inject them?
+            // Better: Assume HTML is correct.
 
-    // CONFIG
-    const Z_GAP = 600;
-    const ITEM_COUNT = 15;
-    const LOOP_SIZE = ITEM_COUNT * Z_GAP;
-    const STAR_COUNT = 100;
+            // CONFIG
+            const Z_GAP = 600;
+            const ITEM_COUNT = 15;
+            const LOOP_SIZE = ITEM_COUNT * Z_GAP;
+            const STAR_COUNT = 100;
 
-    const TEXTS = ["TURNING", "IDEAS", "INTO", "REALITY", "SAFE", "SECURE", "TRUST", "VISION", "FUTURE"];
-    const MESSAGES = [
-    "WE TURN YOUR IDEAS INTO REALITY",
-    "WHATEVER IS YOUR IDEA",
-    "MAKE THE USER FEEL SAFE",
-    "TOTAL ENCRYPTION",
-    "ELITE SYSTEMS"
-    ];
+            const TEXTS = ["TURNING", "IDEAS", "INTO", "REALITY", "SAFE", "SECURE", "TRUST", "VISION", "FUTURE"];
+            const MESSAGES = [
+                "WE TURN YOUR IDEAS INTO REALITY",
+                "WHATEVER IS YOUR IDEA",
+                "MAKE THE USER FEEL SAFE",
+                "TOTAL ENCRYPTION",
+                "ELITE SYSTEMS"
+            ];
 
-    const items = [];
+            const items = [];
 
-    // 1. GENERATE SCENE
-    function buildWorld() {
-    // Clear existing just in case
-    world.innerHTML = '';
+            // 1. GENERATE SCENE
+            function buildWorld() {
+                // Clear existing just in case
+                world.innerHTML = '';
 
-    // Main Objects
-    for (let i = 0; i < ITEM_COUNT; i++) { const isText=i % 3===0; // Mixed Text and Cards const
-        el=document.createElement('div'); el.className='item' ; // Content if (isText) { const
-        txt=document.createElement('div'); txt.className='big-text' ; txt.innerText=TEXTS[i % TEXTS.length];
-        el.appendChild(txt); } else { const card=document.createElement('div'); card.className='card' ; const
-        msg=MESSAGES[i % MESSAGES.length]; card.innerHTML=` <div class="index">0${i} // SECURE_PROTOCOL</div>
+                // Main Objects
+                for (let i = 0; i < ITEM_COUNT; i++) {
+                    const isText = i % 3 === 0; // Mixed Text and Cards const
+                    el = document.createElement('div'); el.className = 'item'; // Content if (isText) { const
+                    txt = document.createElement('div'); txt.className = 'big-text'; txt.innerText = TEXTS[i % TEXTS.length];
+                    el.appendChild(txt);
+                } else {
+                    const card = document.createElement('div'); card.className = 'card'; const
+                        msg = MESSAGES[i % MESSAGES.length]; card.innerHTML = ` <div class="index">0${i} // SECURE_PROTOCOL</div>
         <h2>${isText ? 'SYSTEM' : 'DATA'}</h2>
         <p style="color:#d0d0d0; font-size:1.1rem; font-weight:bold; margin-top: auto; line-height:1.4;">
             ${msg}
@@ -4571,32 +4594,37 @@
         <p style="color:#666; font-size:0.7rem; font-family:monospace; margin-top: 10px;">ID:
             [${Math.random().toString(36).substr(2, 6).toUpperCase()}]</p>
         `;
-        el.appendChild(card);
-        }
+                    el.appendChild(card);
+                }
 
-        // Initial Random Position
-        const x = (Math.random() - 0.5) * window.innerWidth * 0.6;
-        const y = (Math.random() - 0.5) * window.innerHeight * 0.6;
-        const rotZ = (Math.random() - 0.5) * 20;
+                // Initial Random Position
+                const x = (Math.random() - 0.5) * window.innerWidth * 0.6;
+                const y = (Math.random() - 0.5) * window.innerHeight * 0.6;
+                const rotZ = (Math.random() - 0.5) * 20;
 
-        world.appendChild(el);
+                world.appendChild(el);
 
-        items.push({
-        el,
-        x, y, rotZ,
-        baseZ: -i * Z_GAP, // Start staggered back
-        type: isText ? 'text' : 'card'
-        });
-        }
+                items.push({
+                    el,
+                    x, y, rotZ,
+                    baseZ: -i * Z_GAP, // Start staggered back
+                    type: isText ? 'text' : 'card'
+                });
+            }
 
-        // Stars
-        for (let i = 0; i < STAR_COUNT; i++) { const el=document.createElement('div'); el.className='particle' ;
-            world.appendChild(el); items.push({ el, x: (Math.random() - 0.5) * 2000, y: (Math.random() - 0.5) * 2000,
-            rotZ: 0, baseZ: -(Math.random() * LOOP_SIZE), type: 'star' }); } } buildWorld(); // 2. SCROLL LOOP const
-            state={ currentZ: 0, targetZ: 0 }; function updateBrutalWorld() { // Determine layout const
-            rect=section.getBoundingClientRect(); const viewH=window.innerHeight; const scrollDist=section.offsetHeight
-            - viewH; const scrolled=-rect.top; // Normalize 0 to 1 let progress=0; if (scrolled <=0) progress=0; else if
-            (scrolled>= scrollDist) progress = 1;
+            // Stars
+            for (let i = 0; i < STAR_COUNT; i++) {
+                const el = document.createElement('div'); el.className = 'particle';
+                world.appendChild(el); items.push({
+                    el, x: (Math.random() - 0.5) * 2000, y: (Math.random() - 0.5) * 2000,
+                    rotZ: 0, baseZ: -(Math.random() * LOOP_SIZE), type: 'star'
+                });
+            }
+        } buildWorld(); // 2. SCROLL LOOP const
+        state = { currentZ: 0, targetZ: 0 }; function updateBrutalWorld() { // Determine layout const
+            rect = section.getBoundingClientRect(); const viewH = window.innerHeight; const scrollDist = section.offsetHeight
+                - viewH; const scrolled = -rect.top; // Normalize 0 to 1 let progress=0; if (scrolled <=0) progress=0; else if
+            (scrolled >= scrollDist) progress = 1;
             else progress = scrolled / scrollDist;
 
             // Optimization: If way off screen, maybe skip?
@@ -4611,87 +4639,87 @@
             const currentDist = state.currentZ;
 
             items.forEach(item => {
-            let z = item.baseZ + currentDist;
+                let z = item.baseZ + currentDist;
 
-            const loopDepth = LOOP_SIZE;
-            let vizZ = z % loopDepth;
+                const loopDepth = LOOP_SIZE;
+                let vizZ = z % loopDepth;
 
-            // Force loop logic to keep negative z (flying towards camera)
-            while (vizZ > 500) vizZ -= loopDepth;
-            while (vizZ < -loopDepth + 500) vizZ +=loopDepth; // Opacity Logic let alpha=1; const maxDist=-3000; if
-                (vizZ < maxDist) { alpha=0; } else if (vizZ < maxDist + 1000) { alpha=(vizZ - maxDist) / 1000; } if
-                (vizZ> 200) alpha = 0;
+                // Force loop logic to keep negative z (flying towards camera)
+                while (vizZ > 500) vizZ -= loopDepth;
+                while (vizZ < -loopDepth + 500) vizZ += loopDepth; // Opacity Logic let alpha=1; const maxDist=-3000; if
+                (vizZ < maxDist) { alpha = 0; } else if (vizZ < maxDist + 1000) { alpha = (vizZ - maxDist) / 1000; } if
+                    (vizZ > 200) alpha = 0;
                 else if (vizZ > 0) alpha = 1 - (vizZ / 200);
 
                 item.el.style.opacity = alpha;
 
                 if (alpha > 0) {
-                if (item.type === 'star') {
-                const stretch = 1 + (Math.abs(state.targetZ - state.currentZ) * 0.05);
-                item.el.style.transform = `translate3d(${item.x}px, ${item.y}px, ${vizZ}px) scale3d(1, 1,
+                    if (item.type === 'star') {
+                        const stretch = 1 + (Math.abs(state.targetZ - state.currentZ) * 0.05);
+                        item.el.style.transform = `translate3d(${item.x}px, ${item.y}px, ${vizZ}px) scale3d(1, 1,
                 ${Math.min(stretch, 5)})`;
-                } else {
-                const rot = item.rotZ + (currentDist * 0.02);
-                item.el.style.transform = `
+                    } else {
+                        const rot = item.rotZ + (currentDist * 0.02);
+                        item.el.style.transform = `
                 translate3d(${item.x}px, ${item.y}px, ${vizZ}px)
                 rotateZ(${rot}deg)
                 `;
+                    }
                 }
-                }
-                });
+            });
 
-                requestAnimationFrame(updateBrutalWorld);
-                }
-                requestAnimationFrame(updateBrutalWorld);
+            requestAnimationFrame(updateBrutalWorld);
+        }
+        requestAnimationFrame(updateBrutalWorld);
 
-                })();
-                (function initAppDevInteractions() {
-                const section = document.getElementById('app-dev');
-                if (!section) return;
+                }) ();
+        (function initAppDevInteractions() {
+            const section = document.getElementById('app-dev');
+            if (!section) return;
 
-                const titles = section.querySelectorAll('.brutal-title .word');
+            const titles = section.querySelectorAll('.brutal-title .word');
 
-                // Text Split for Hover Effect
-                titles.forEach(word => {
+            // Text Split for Hover Effect
+            titles.forEach(word => {
                 const text = word.innerText;
                 word.innerHTML = '';
                 text.split('').forEach(char => {
-                const span = document.createElement('span');
-                span.classList.add('char');
-                span.innerText = char;
-                span.style.display = 'inline-block';
-                span.style.transition = 'color 0.2s, transform 0.2s';
-                word.appendChild(span);
+                    const span = document.createElement('span');
+                    span.classList.add('char');
+                    span.innerText = char;
+                    span.style.display = 'inline-block';
+                    span.style.transition = 'color 0.2s, transform 0.2s';
+                    word.appendChild(span);
 
-                // Add individual hover effect
-                span.addEventListener('mouseenter', () => {
-                span.style.color = 'var(--accent)';
-                span.style.transform = 'translateY(-10px) scale(1.1)';
+                    // Add individual hover effect
+                    span.addEventListener('mouseenter', () => {
+                        span.style.color = 'var(--accent)';
+                        span.style.transform = 'translateY(-10px) scale(1.1)';
+                    });
+                    span.addEventListener('mouseleave', () => {
+                        span.style.color = '';
+                        span.style.transform = '';
+                    });
                 });
-                span.addEventListener('mouseleave', () => {
-                span.style.color = '';
-                span.style.transform = '';
-                });
-                });
-                });
-                })();
-                </script>
-                <script>
-                    // CONTACT FORM BACKEND INTEGRATION
-                    document.getElementById('contact-form')?.addEventListener('submit', async function (e) {
-                        e.preventDefault();
+            });
+        })();
+    </script>
+    <script>
+        // CONTACT FORM BACKEND INTEGRATION
+        document.getElementById('contact-form')?.addEventListener('submit', async function (e) {
+            e.preventDefault();
 
-                        const form = e.target;
-                        const submitBtn = form.querySelector('button[type="submit"]');
-                        const originalBtnText = submitBtn.innerText;
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerText;
 
-                        // 1. Collect Form Data
-                        const formData = new FormData(form);
-                        const data = Object.fromEntries(formData.entries());
+            // 1. Collect Form Data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
 
-                        // 2. UI Feedback: Loading State
-                        submitBtn.disabled = true;
-                        submitBtn.innerHTML = `
+            // 2. UI Feedback: Loading State
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
                 <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-primary inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -4699,38 +4727,38 @@
                 IGNITING...
             `;
 
-                        try {
-                            // REPLACE THIS URL with your Render Backend URL after deployment
-                            const BACKEND_URL = 'https://email-backend-xls1.onrender.com/contact';
+            try {
+                // REPLACE THIS URL with your Render Backend URL after deployment
+                const BACKEND_URL = 'https://email-backend-xls1.onrender.com/contact';
 
-                            const response = await fetch(BACKEND_URL, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify(data),
-                            });
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
 
-                            const result = await response.json();
+                const result = await response.json();
 
-                            if (result.ok) {
-                                // Success Case
-                                alert('IGNITION SUCCESSFUL. Check your email for confirmation.');
-                                form.reset();
-                            } else {
-                                // Error Case from Backend
-                                throw new Error(result.error || 'Ignition failed.');
-                            }
-                        } catch (error) {
-                            console.error('Contact Form Error:', error);
-                            alert(`ENGINE ERROR: ${error.message}`);
-                        } finally {
-                            // Restore Button State
-                            submitBtn.disabled = false;
-                            submitBtn.innerText = originalBtnText;
-                        }
-                    });
-                </script>
+                if (result.ok) {
+                    // Success Case
+                    alert('IGNITION SUCCESSFUL. Check your email for confirmation.');
+                    form.reset();
+                } else {
+                    // Error Case from Backend
+                    throw new Error(result.error || 'Ignition failed.');
+                }
+            } catch (error) {
+                console.error('Contact Form Error:', error);
+                alert(`ENGINE ERROR: ${error.message}`);
+            } finally {
+                // Restore Button State
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalBtnText;
+            }
+        });
+    </script>
 </body>
 
 </html>
