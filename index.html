@@ -12,6 +12,8 @@
     <link rel="apple-touch-icon" href="/image.png" sizes="180x180">
     <meta name="theme-color" content="#050505">
     <link rel="canonical" href="https://bkeeprs.website/">
+    <!-- Preload first frame of scroll video for instant loading -->
+    <link rel="preload" as="image" href="scrolling%20show/ezgif-frame-001.jpg">
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -3488,42 +3490,7 @@
                 });
             }
 
-            // --- Contact form mailto ---
-            const contactForm = document.getElementById('contact-form');
-            if (contactForm) {
-                contactForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const form = e.target;
-                    const formData = new FormData(form);
 
-                    const name = formData.get('name');
-                    const email = formData.get('email');
-                    const phone = formData.get('phone') || '';
-                    const message = formData.get('message');
-                    const plan = formData.get('plan') || 'Not specified';
-
-                    const subject = encodeURIComponent(`New Contact from ${name}`);
-                    const body = encodeURIComponent(`Plan: ${plan}\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}`);
-                    window.location.href = `mailto:contact.bkeeprslabs@gmail.com?subject=${subject}&body=${body}`;
-
-                    const button = form.querySelector('button[type="submit"]');
-                    if (button) {
-                        const originalText = button.textContent;
-                        button.textContent = 'SIGNAL TRANSMITTED ✓';
-                        button.classList.add('bg-green-500');
-                        setTimeout(() => {
-                            button.textContent = originalText;
-                            button.classList.remove('bg-green-500');
-                            form.reset();
-
-                            // keep plan if set
-                            if (planSelect && plan && plan !== 'Not specified') {
-                                planSelect.value = plan;
-                            }
-                        }, 2500);
-                    }
-                });
-            }
         });
     </script>
     <script>
@@ -4082,34 +4049,55 @@
 
             // Preload 
             const preloadFrames = () => {
+                // Eagerly load the first chunk instantly
                 let i = 1;
+
                 const loadChunk = (deadline) => {
                     while (i <= frameCount && (deadline.timeRemaining() > 1 || deadline.didTimeout)) {
                         const img = new Image();
                         img.src = `${basePath}${pad(i)}.jpg`;
                         frames[i] = img;
-                        img.onload = () => {
-                            imagesLoaded++;
-                            if (i === 1 || (imagesLoaded === 1)) {
+
+                        // Immediate render for first frame
+                        if (i === 1) {
+                            img.onload = () => {
+                                imagesLoaded++;
                                 resizeCanvas();
                                 updateFrame();
-                            }
-                        };
+                            };
+                        } else {
+                            img.onload = () => imagesLoaded++;
+                        }
                         i++;
                     }
                     if (i <= frameCount) {
                         requestIdleCallback(loadChunk, { timeout: 1000 });
                     }
                 };
+
+                // Start immediately for first 10 frames (critical path)
+                for (let k = 1; k <= 10; k++) {
+                    const img = new Image();
+                    img.src = `${basePath}${pad(k)}.jpg`;
+                    frames[k] = img;
+                    if (k === 1) {
+                        img.onload = () => {
+                            imagesLoaded++;
+                            resizeCanvas();
+                            updateFrame();
+                        };
+                    }
+                }
+                i = 11; // Optimization: Skip first 10 in idle callback logic
+
                 if ('requestIdleCallback' in window) {
                     requestIdleCallback(loadChunk, { timeout: 1000 });
                 } else {
                     // Fallback
-                    for (let j = 1; j <= frameCount; j++) {
+                    for (let j = 11; j <= frameCount; j++) {
                         const img = new Image();
                         img.src = `${basePath}${pad(j)}.jpg`;
                         frames[j] = img;
-                        if (j === 1) img.onload = () => { resizeCanvas(); updateFrame(); };
                     }
                 }
             };
@@ -4776,7 +4764,7 @@
 
                 if (result.ok) {
                     // Success Case
-                    alert('IGNITION SUCCESSFUL. Check your email for confirmation.');
+                    alert('IGNITION SUCCESSFUL. Our team will contact you shortly.');
                     form.reset();
                 } else {
                     // Error Case from Backend
