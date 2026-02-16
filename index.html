@@ -3114,8 +3114,10 @@
                             slots available.</p>
 
                         <form class="grid grid-cols-1 gap-5 text-left" id="contact-form">
-                            <!-- Honeypot field (hidden from users) -->
+                            <!-- Honeypot fields (hidden from users) -->
                             <input type="text" name="website" style="display:none !important" tabindex="-1"
+                                autocomplete="off" />
+                            <input type="text" name="company" style="display:none !important" tabindex="-1"
                                 autocomplete="off" />
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <input type="text" name="name" placeholder="NAME" required
@@ -4779,11 +4781,17 @@
                 }
             } catch (error) {
                 console.error('Contact Form Error:', error);
+
+                let errorMsg = error.message;
                 if (error.name === 'AbortError') {
-                    alert('ENGINE TIMEOUT: The server is taking a while to wake up (Render Free Tier). We have initiated the sequence—please WAIT 30 seconds and try clicking "ENGAGE" again.');
-                } else {
-                    alert(`ENGINE ERROR: ${error.message}\n\nPlease check if your email settings (GMAIL_APP_PASS) are correct in Render.`);
+                    errorMsg = 'ENGINE TIMEOUT: The server is taking a while to wake up (Render Free Tier). We have initiated the sequence—please WAIT 30 seconds and try clicking "ENGAGE" again.';
+                } else if (errorMsg === 'TOO_MANY_REQUESTS') {
+                    errorMsg = 'SECURITY BLOCK: Too many requests. Please wait 15 minutes and try again.';
+                } else if (errorMsg === 'SPAM_DETECTED') {
+                    errorMsg = 'SECURITY BLOCK: Potential spam detected.';
                 }
+
+                alert(errorMsg);
             } finally {
                 // Restore Button State
                 submitBtn.disabled = false;
