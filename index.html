@@ -3919,6 +3919,9 @@
 
                 // On Hover
                 link.addEventListener('mouseenter', () => {
+                    // Disable effect in Arabic to prevent reverting to English text
+                    if (document.documentElement.lang === 'ar') return;
+
                     isHovered = true;
                     let iteration = 0;
 
@@ -3955,6 +3958,8 @@
 
                 // On Leave (Reverse)
                 link.addEventListener('mouseleave', () => {
+                    if (document.documentElement.lang === 'ar') return;
+
                     isHovered = false;
                     clearInterval(interval);
 
