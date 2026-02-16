@@ -4752,9 +4752,9 @@
                 // REPLACE THIS URL with your Render Backend URL after deployment
                 const BACKEND_URL = 'https://email-backend-xls1.onrender.com/contact';
 
-                // 3. Timeout Controller (30 seconds)
+                // 3. Timeout Controller (75 seconds)
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 30000);
+                const timeoutId = setTimeout(() => controller.abort(), 75000);
 
                 const response = await fetch(BACKEND_URL, {
                     method: 'POST',
@@ -4780,7 +4780,7 @@
             } catch (error) {
                 console.error('Contact Form Error:', error);
                 if (error.name === 'AbortError') {
-                    alert('ENGINE TIMEOUT: The server is taking too long to respond. This usually happens when the backend is starting up. Please try again in 1 minute.');
+                    alert('ENGINE TIMEOUT: The server is taking a while to wake up (Render Free Tier). We have initiated the sequence—please WAIT 30 seconds and try clicking "ENGAGE" again.');
                 } else {
                     alert(`ENGINE ERROR: ${error.message}\n\nPlease check if your email settings (GMAIL_APP_PASS) are correct in Render.`);
                 }
