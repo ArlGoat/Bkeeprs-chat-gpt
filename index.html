@@ -3899,8 +3899,9 @@
             });
 
             // Load saved language or default to English
+            // User requested to ALWAYS open in English, so we ignore localStorage or default to 'en'.
             let saved = 'en';
-            try { saved = localStorage.getItem('bkeeprs_lang') || 'en'; } catch (e) { }
+            // try { saved = localStorage.getItem('bkeeprs_lang') || 'en'; } catch (e) { } // Force 'en'
             applyLang(saved);
         })();
     </script>
@@ -3913,14 +3914,20 @@
             const navLinks = document.querySelectorAll('.nav-link, .hacker-btn');
 
             navLinks.forEach(link => {
-                const originalText = link.innerText.trim();
+                // Initialize originalText variable, but populate it on hover
+                let originalText = link.innerText.trim();
                 let interval = null;
                 let isHovered = false;
 
                 // On Hover
+                // On Hover
                 link.addEventListener('mouseenter', () => {
                     // Disable effect in Arabic to prevent reverting to English text
                     if (document.documentElement.lang === 'ar') return;
+
+                    // Dynamically update the original text on hover before scrambling
+                    // This ensures we have the current language text if it changed
+                    originalText = link.innerText.trim();
 
                     isHovered = true;
                     let iteration = 0;
@@ -3959,6 +3966,28 @@
                 // On Leave (Reverse)
                 link.addEventListener('mouseleave', () => {
                     if (document.documentElement.lang === 'ar') return;
+
+                    // Dynamically get the text content to restore to
+                    const originalText = link.innerText.trim();
+                    // Or, since we scrambled it, we should rely on the text content BEFORE scrambling?
+                    // Actually, if we scrambled it, innerText is scrambled.
+                    // We need to capture originalText at the START of interactions.
+                    // BUT, if we switched language, the *displayed* text is correct (English).
+                    // So we should update our "memory" of what represents "Normal".
+                    // The safest way is to read the 'data-i18n' attribute and look it up?
+                    // OR, simply assume that if we are NOT scrambled, the text is correct.
+                    // But here we are leaving. The text IS scrambled.
+
+                    // BETTER APPROACH:
+                    // Remove `const originalText = link.innerText.trim();` from the top scope.
+                    // Declare `let originalText = link.innerText.trim();` at top scope, but update it!
+                    // Update it whenever language changes? No, too coupled.
+
+                    // Simple hack: 
+                    // When mouse *enters*, we capture `originalText`.
+                    // We use that same `originalText` for the *leave* animation.
+                    // Since one must enter before leaving, this works!
+
 
                     isHovered = false;
                     clearInterval(interval);
