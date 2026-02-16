@@ -4598,104 +4598,124 @@
 
             // 1. GENERATE SCENE
             function buildWorld() {
-                // Clear existing just in case
+                // Clear existing
                 world.innerHTML = '';
 
                 // Main Objects
                 for (let i = 0; i < ITEM_COUNT; i++) {
-                    const isText = i % 3 === 0; // Mixed Text and Cards const
-                    el = document.createElement('div'); el.className = 'item'; // Content if (isText) { const
-                    txt = document.createElement('div'); txt.className = 'big-text'; txt.innerText = TEXTS[i % TEXTS.length];
-                    el.appendChild(txt);
-                } else {
-                    const card = document.createElement('div'); card.className = 'card'; const
-                        msg = MESSAGES[i % MESSAGES.length]; card.innerHTML = ` <div class="index">0${i} // SECURE_PROTOCOL</div>
-        <h2>${isText ? 'SYSTEM' : 'DATA'}</h2>
-        <p style="color:#d0d0d0; font-size:1.1rem; font-weight:bold; margin-top: auto; line-height:1.4;">
-            ${msg}
-        </p>
-        <p style="color:#666; font-size:0.7rem; font-family:monospace; margin-top: 10px;">ID:
-            [${Math.random().toString(36).substr(2, 6).toUpperCase()}]</p>
-        `;
-                    el.appendChild(card);
-                }
+                    const isText = i % 3 === 0;
+                    const el = document.createElement('div');
+                    el.className = 'item';
 
-                // Initial Random Position
-                const x = (Math.random() - 0.5) * window.innerWidth * 0.6;
-                const y = (Math.random() - 0.5) * window.innerHeight * 0.6;
-                const rotZ = (Math.random() - 0.5) * 20;
-
-                world.appendChild(el);
-
-                items.push({
-                    el,
-                    x, y, rotZ,
-                    baseZ: -i * Z_GAP, // Start staggered back
-                    type: isText ? 'text' : 'card'
-                });
-            }
-
-            // Stars
-            for (let i = 0; i < STAR_COUNT; i++) {
-                const el = document.createElement('div'); el.className = 'particle';
-                world.appendChild(el); items.push({
-                    el, x: (Math.random() - 0.5) * 2000, y: (Math.random() - 0.5) * 2000,
-                    rotZ: 0, baseZ: -(Math.random() * LOOP_SIZE), type: 'star'
-                });
-            }
-        } buildWorld(); // 2. SCROLL LOOP const
-        state = { currentZ: 0, targetZ: 0 }; function updateBrutalWorld() { // Determine layout const
-            rect = section.getBoundingClientRect(); const viewH = window.innerHeight; const scrollDist = section.offsetHeight
-                - viewH; const scrolled = -rect.top; // Normalize 0 to 1 let progress=0; if (scrolled <=0) progress=0; else if
-            (scrolled >= scrollDist) progress = 1;
-            else progress = scrolled / scrollDist;
-
-            // Optimization: If way off screen, maybe skip?
-            // But sticky might keep it visible.
-
-            const totalTravel = LOOP_SIZE + 2000;
-            state.targetZ = progress * totalTravel;
-
-            // Lerp
-            state.currentZ += (state.targetZ - state.currentZ) * 0.1;
-
-            const currentDist = state.currentZ;
-
-            items.forEach(item => {
-                let z = item.baseZ + currentDist;
-
-                const loopDepth = LOOP_SIZE;
-                let vizZ = z % loopDepth;
-
-                // Force loop logic to keep negative z (flying towards camera)
-                while (vizZ > 500) vizZ -= loopDepth;
-                while (vizZ < -loopDepth + 500) vizZ += loopDepth; // Opacity Logic let alpha=1; const maxDist=-3000; if
-                (vizZ < maxDist) { alpha = 0; } else if (vizZ < maxDist + 1000) { alpha = (vizZ - maxDist) / 1000; } if
-                    (vizZ > 200) alpha = 0;
-                else if (vizZ > 0) alpha = 1 - (vizZ / 200);
-
-                item.el.style.opacity = alpha;
-
-                if (alpha > 0) {
-                    if (item.type === 'star') {
-                        const stretch = 1 + (Math.abs(state.targetZ - state.currentZ) * 0.05);
-                        item.el.style.transform = `translate3d(${item.x}px, ${item.y}px, ${vizZ}px) scale3d(1, 1,
-                ${Math.min(stretch, 5)})`;
+                    if (isText) {
+                        const txt = document.createElement('div');
+                        txt.className = 'big-text';
+                        txt.innerText = TEXTS[i % TEXTS.length];
+                        el.appendChild(txt);
                     } else {
-                        const rot = item.rotZ + (currentDist * 0.02);
-                        item.el.style.transform = `
-                translate3d(${item.x}px, ${item.y}px, ${vizZ}px)
-                rotateZ(${rot}deg)
-                `;
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        const msg = MESSAGES[i % MESSAGES.length];
+                        card.innerHTML = `
+                            <div class="index">0${i} // SECURE_PROTOCOL</div>
+                            <h2>SYSTEM</h2>
+                            <p style="color:#d0d0d0; font-size:1.1rem; font-weight:bold; margin-top: auto; line-height:1.4;">
+                                ${msg}
+                            </p>
+                            <p style="color:#666; font-size:0.7rem; font-family:monospace; margin-top: 10px;">ID:
+                                [${Math.random().toString(36).substr(2, 6).toUpperCase()}]</p>
+                        `;
+                        el.appendChild(card);
                     }
+
+                    const x = (Math.random() - 0.5) * window.innerWidth * 0.6;
+                    const y = (Math.random() - 0.5) * window.innerHeight * 0.6;
+                    const rotZ = (Math.random() - 0.5) * 20;
+
+                    world.appendChild(el);
+                    items.push({
+                        el, x, y, rotZ,
+                        baseZ: -i * Z_GAP,
+                        type: isText ? 'text' : 'card'
+                    });
                 }
-            });
 
+                // Stars
+                for (let i = 0; i < STAR_COUNT; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'particle';
+                    world.appendChild(el);
+                    items.push({
+                        el,
+                        x: (Math.random() - 0.5) * 2000,
+                        y: (Math.random() - 0.5) * 2000,
+                        rotZ: 0,
+                        baseZ: -(Math.random() * LOOP_SIZE),
+                        type: 'star'
+                    });
+                }
+            }
+            buildWorld();
+
+            // 2. SCROLL LOOP
+            const state = { currentZ: 0, targetZ: 0 };
+
+            function updateBrutalWorld() {
+                const rect = section.getBoundingClientRect();
+                const viewH = window.innerHeight;
+                const scrollDist = section.offsetHeight - viewH;
+                const scrolled = -rect.top;
+
+                let progress = 0;
+                if (scrolled <= 0) progress = 0;
+                else if (scrolled >= scrollDist) progress = 1;
+                else progress = scrolled / scrollDist;
+
+                const totalTravel = LOOP_SIZE + 2000;
+                state.targetZ = progress * totalTravel;
+
+                // Lerp
+                state.currentZ += (state.targetZ - state.currentZ) * 0.1;
+
+                const currentDist = state.currentZ;
+
+                items.forEach(item => {
+                    let z = item.baseZ + currentDist;
+                    const loopDepth = LOOP_SIZE;
+                    let vizZ = z % loopDepth;
+
+                    while (vizZ > 500) vizZ -= loopDepth;
+                    while (vizZ < -loopDepth + 500) vizZ += loopDepth;
+
+                    let alpha = 1;
+                    const maxDist = -3000;
+                    if (vizZ < maxDist) {
+                        alpha = 0;
+                    } else if (vizZ < maxDist + 1000) {
+                        alpha = (vizZ - maxDist) / 1000;
+                    }
+
+                    if (vizZ > 200) alpha = 0;
+                    else if (vizZ > 0) alpha = 1 - (vizZ / 200);
+
+                    item.el.style.opacity = alpha;
+
+                    if (alpha > 0) {
+                        if (item.type === 'star') {
+                            const stretch = 1 + (Math.abs(state.targetZ - state.currentZ) * 0.05);
+                            item.el.style.transform = `translate3d(${item.x}px, ${item.y}px, ${vizZ}px) scale3d(1, 1, ${Math.min(stretch, 5)})`;
+                        } else {
+                            const rot = item.rotZ + (currentDist * 0.02);
+                            item.el.style.transform = `translate3d(${item.x}px, ${item.y}px, ${vizZ}px) rotateZ(${rot}deg)`;
+                        }
+                    }
+                });
+
+                requestAnimationFrame(updateBrutalWorld);
+            }
             requestAnimationFrame(updateBrutalWorld);
-        }
-        requestAnimationFrame(updateBrutalWorld);
 
-        }) ();
+        })();
         (function initAppDevInteractions() {
             const section = document.getElementById('app-dev');
             if (!section) return;
@@ -4751,8 +4771,8 @@
             `;
 
             try {
-                // REPLACE THIS URL with your Render Backend URL after deployment
-                const BACKEND_URL = 'https://email-backend-xls1.onrender.com/contact';
+                // 3. Backend URL with Cache Buster (to bypass browser caching)
+                const BACKEND_URL = `https://email-backend-xls1.onrender.com/ignition?v=${Date.now()}`;
 
                 // 3. Timeout Controller (75 seconds)
                 const controller = new AbortController();
