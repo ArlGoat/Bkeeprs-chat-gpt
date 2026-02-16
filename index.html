@@ -3868,7 +3868,13 @@
                 // Apply textContent for data-i18n
                 document.querySelectorAll('[data-i18n]').forEach(el => {
                     const key = el.getAttribute('data-i18n');
-                    if (dict[key]) el.textContent = dict[key];
+                    if (dict[key]) {
+                        el.textContent = dict[key];
+                        // Store the clean text for the hacker effect to use
+                        if (el.classList.contains('nav-link') || el.classList.contains('hacker-btn')) {
+                            el.dataset.originalText = dict[key];
+                        }
+                    }
                 });
 
                 // Apply innerHTML for data-i18n-html (for titles with <br> or <span>)
@@ -3914,20 +3920,21 @@
             const navLinks = document.querySelectorAll('.nav-link, .hacker-btn');
 
             navLinks.forEach(link => {
-                // Initialize originalText variable, but populate it on hover
-                let originalText = link.innerText.trim();
+                // Initialize data-original-text if NOT already set (for initial load)
+                if (!link.dataset.originalText) {
+                    link.dataset.originalText = link.innerText.trim();
+                }
+
                 let interval = null;
                 let isHovered = false;
 
-                // On Hover
                 // On Hover
                 link.addEventListener('mouseenter', () => {
                     // Disable effect in Arabic to prevent reverting to English text
                     if (document.documentElement.lang === 'ar') return;
 
-                    // Dynamically update the original text on hover before scrambling
-                    // This ensures we have the current language text if it changed
-                    originalText = link.innerText.trim();
+                    // Always prefer the data-attribute if available, as it is the "source of truth"
+                    const originalText = link.dataset.originalText || link.innerText.trim();
 
                     isHovered = true;
                     let iteration = 0;
@@ -3935,11 +3942,6 @@
                     clearInterval(interval);
 
                     interval = setInterval(() => {
-                        // If user stopped hovering, we want to REVERSE or STOP?
-                        // The user wants it to REVERSE ("back to normal").
-                        // But we handle reverse in mouseleave. 
-                        // Just run forward logic here.
-
                         link.innerHTML = originalText
                             .split("")
                             .map((letter, index) => {
@@ -3967,37 +3969,11 @@
                 link.addEventListener('mouseleave', () => {
                     if (document.documentElement.lang === 'ar') return;
 
-                    // Dynamically get the text content to restore to
-                    const originalText = link.innerText.trim();
-                    // Or, since we scrambled it, we should rely on the text content BEFORE scrambling?
-                    // Actually, if we scrambled it, innerText is scrambled.
-                    // We need to capture originalText at the START of interactions.
-                    // BUT, if we switched language, the *displayed* text is correct (English).
-                    // So we should update our "memory" of what represents "Normal".
-                    // The safest way is to read the 'data-i18n' attribute and look it up?
-                    // OR, simply assume that if we are NOT scrambled, the text is correct.
-                    // But here we are leaving. The text IS scrambled.
-
-                    // BETTER APPROACH:
-                    // Remove `const originalText = link.innerText.trim();` from the top scope.
-                    // Declare `let originalText = link.innerText.trim();` at top scope, but update it!
-                    // Update it whenever language changes? No, too coupled.
-
-                    // Simple hack: 
-                    // When mouse *enters*, we capture `originalText`.
-                    // We use that same `originalText` for the *leave* animation.
-                    // Since one must enter before leaving, this works!
-
+                    // Dynamically get the text content to restore to (Safely from data attribute)
+                    const originalText = link.dataset.originalText || link.innerText.trim();
 
                     isHovered = false;
                     clearInterval(interval);
-
-                    // We need to know current "state". 
-                    // Actually, simpler logic:
-                    // Just start from "Full Text" and work backwards to "Clean Text".
-                    // But "Clean Text" means NO random chars?
-                    // User said "back to normal". Normal is `originalText` (white/gray).
-                    // So we transition from Current Hacked -> Normal.
 
                     let iteration = originalText.length;
 
@@ -4005,11 +3981,6 @@
                         link.innerHTML = originalText
                             .split("")
                             .map((letter, index) => {
-                                // Reverse logic:
-                                // If index > iteration, it is "Normal" (Clean)
-                                // If index <= iteration, it is "Hacked" (Accent)
-                                // We want to wipe from Right to Left.
-
                                 if (index < iteration) {
                                     return `<span class="text-accent">${letter}</span>`;
                                 }
@@ -4027,6 +3998,7 @@
                 });
             });
         })();
+
     </script>
 
     <script>
@@ -4733,7 +4705,7 @@
         }
         requestAnimationFrame(updateBrutalWorld);
 
-                }) ();
+        }) ();
         (function initAppDevInteractions() {
             const section = document.getElementById('app-dev');
             if (!section) return;
